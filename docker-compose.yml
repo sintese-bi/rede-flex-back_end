@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  dev:
+    container_name: rede-flex-back_end-dev
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+      - ./src/server.js:/server.js
+    ports:
+      - '8080:8080'
+   
+
+  prod:
+    container_name: rede-flex-back_end-prod
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app
+    ports:
+      - '8883:8080'
+    
+      
+
+
+
+

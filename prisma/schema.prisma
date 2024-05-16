@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  use_uuid             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  use_name             String?  @db.VarChar(100)
+  use_whats_app        String?  @db.VarChar(20)
+  use_margem_gc        Boolean?
+  use_margem_al        Boolean?
+  use_margem_total     Boolean?
+  use_volume_gc        Boolean?
+  use_volume_al        Boolean?
+  use_volume_total     Boolean?
+  use_margem_gc_min    Float?
+  use_margem_al_min    Float?
+  use_margem_total_min Float?
+  use_volume_gc_min    Float?
+  use_volume_al_min    Float?
+  use_volume_total_min Float?
+}
+
+model posto_signal {
+  table_id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  posto_id      String?  @db.Uuid
+  vol_sold      Float?   @db.Real
+  vol_rate      Float?   @db.Real
+  vol_alert     String?  @db.VarChar(255)
+  invoicing     Float?   @db.Real
+  invoice_rate  Float?   @db.Real
+  invoice_alert String?  @db.VarChar(255)
+  created_at    DateTime @default(now()) @db.Timestamp
+
+  // Relacionamento com rd_posto
+  rd_posto rd_posto? @relation(fields: [posto_id], references: [posto_uuid])
+
+  @@index([posto_id])
+}
+
+model rd_posto {
+  posto_uuid String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  posto_name String? @db.VarChar(255)
+
+  // Relacionamento inverso
+  posto_signals posto_signal[]
+}

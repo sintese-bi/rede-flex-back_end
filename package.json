@@ -1,0 +1,17 @@
+{
+  "name": "rede-flex-back_end",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/sintese-bi/rede-flex-back_end.git",
+  "author": "Eloy <eloymjunior00@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "express": "^4.19.2",
+    "prisma": "^5.14.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "typescript": "^5.4.5"
+  }
+}
