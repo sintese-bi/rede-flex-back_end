@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-// import userRouter from "../routes/user";
+import userRouter from "../routes/user";
 
 const app = express();
 const PORT = 8080;
@@ -19,7 +19,7 @@ app.get(`/${apiVersion}`, function (req, res) {
 
 
 app.use(express.json());
-// app.use(`/${apiVersion}`, userRouter);
+app.use(`/${apiVersion}`, userRouter);
 
 app.listen(PORT, () =>
     console.log(`✨ Server started on ${PORT}`)
