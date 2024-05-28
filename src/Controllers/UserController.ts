@@ -157,28 +157,36 @@ class UserController {
     public async sendEmail(req: Request, res: Response) {
         try {
             const { use_email }: { use_email: string } = req.body;
+
             const search = await prisma.users.findFirst({ select: { use_uuid: true }, where: { use_email } });
             if (!search) {
                 return res.status(400).json({ message: "Esse email não existe!" });
             }
-            const codigo: string = Math.floor(1000 + Math.random() * 9000).toString();
-
-            const dataDeExpiracao: Date = new Date();
-            dataDeExpiracao.setMinutes(dataDeExpiracao.getMinutes() + 15);
-
+            const secret = process.env.SECRET;
+            if (secret === undefined) {
+                return res.status(400).json({ message: "A variável de ambiente SECRET não está definida." });
+            }
+            const use_token: string = jwt.sign(
+                { id: search.use_uuid },
+                secret,
+                { expiresIn: '1h' }
+            );
+            const saltRounds = 10;
+            const passwordHash: string = await bcrypt.hashSync(use_token, saltRounds);
             await prisma.users.update({
+
+                data: { use_token: passwordHash },
                 where: { use_uuid: search.use_uuid },
-                data: { use_token: codigo, use_date_expire: dataDeExpiracao }
+            });
 
 
-            })
             const mailOptions = {
                 from: "noreplyredeflex@gmail.com",
-                to: use_email,
+                to: ["bisintese@gmail.com", "eloymjunior00@gmail.com"],
                 subject: "Recuperação de Senha",
                 html: `
-                <p>Seu código de recuperação de senha é: <strong>${codigo}</strong></p></p>
-                
+                <p>Clique no link abaixo para recuperar sua senha do Dashboard RedeFlex:</p>
+                <a href="https://dashboard.redeflex.com.br/passwordaRecovery?use_token=${use_token}&use_email=${use_email}">Recuperar Senha</a>
               `,
             };
 
@@ -189,8 +197,8 @@ class UserController {
                     return res.status(500).json({ message: "Erro ao enviar o email." });
                 } else {
                     return res.status(200).json({
-
-                        message: "Código enviado para o email inserido!",
+                        token: use_token,
+                        message: "Token enviado para o email inserido!",
                     });
                 }
             });
