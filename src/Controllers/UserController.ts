@@ -5,8 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import moment from "moment"
 // import cron from "node-cron"
-import jwt from 'jsonwebtoken';
-const prisma = new PrismaClient();
+import jwt from 'jsonwebtoken'; const prisma = new PrismaClient();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: "smtp.gmail.com",
@@ -21,70 +20,96 @@ const transporter = nodemailer.createTransport({
         rejectUnauthorized: false, //Usar "false" para ambiente de desenvolvimento
     },
 });
-
-interface User {
-    use_name?: string;
-    use_whats_app?: string;
-    use_margem_gc?: boolean;
-    use_margem_al?: boolean;
-    use_margem_total?: boolean;
-    use_volume_gc?: boolean;
-    use_volume_al?: boolean;
-    use_volume_total?: boolean;
-    use_margem_gc_min?: number;
-    use_margem_al_min?: number;
-    use_margem_total_min?: number;
-    use_volume_gc_min?: number;
-    use_volume_al_min?: number;
-    use_volume_total_min?: number;
+interface Users {
+    use_email: string;
+    use_name: string
+    use_password: string
+    use_confirm_password: string
 }
+interface Recover {
+    use_email: string;
+    use_password: string;
+    use_confirm_password: string;
+    use_token: string;
 
+}
 class UserController {
-    public async setVariables(req: Request, res: Response) {
+    public async registerUsers(req: Request, res: Response) {
         try {
-            const {
-                use_name,
-                use_whats_app,
-                use_margem_gc,
-                use_margem_al,
-                use_margem_total,
-                use_volume_gc,
-                use_volume_al,
-                use_volume_total,
-                use_margem_gc_min,
-                use_margem_al_min,
-                use_margem_total_min,
-                use_volume_gc_min,
-                use_volume_al_min,
-                use_volume_total_min,
-            }: User = req.body;
 
-            await prisma.users.updateMany({
-                data: {
-                    use_whats_app: use_whats_app,
-                    use_margem_gc: use_margem_gc,
-                    use_margem_al: use_margem_al,
-                    use_margem_total: use_margem_total,
-                    use_volume_gc: use_volume_gc,
-                    use_volume_al: use_volume_al,
-                    use_volume_total: use_volume_total,
-                    use_margem_gc_min: use_margem_gc_min,
-                    use_margem_al_min: use_margem_al_min,
-                    use_margem_total_min: use_margem_total_min,
-                    use_volume_gc_min: use_volume_gc_min,
-                    use_volume_al_min: use_volume_al_min,
-                    use_volume_total_min: use_volume_total_min,
-                },
-                where: { use_name: use_name }
+            const { use_email, use_name, use_password, use_confirm_password }: Users = req.body;
+
+            const result = await prisma.users.findFirst({
+                where: { use_email: use_email }
             })
-            return res.status(200).json({ message: "Os dados foram atualizados com sucesso!" })
 
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+            if (!emailRegex.test(use_email)) {
+                return res.status(400).json({ message: "O email não é válido!" });
+            }
+            if (result) {
+                return res.status(400).json({ message: "O email já está em uso!" })
+
+            }
+
+            if (use_password.length < 4) {
+                return res
+                    .status(400)
+                    .json({ message: "A senha precisa ter 4 ou mais caracteres!" });
+            }
+            if (use_password != use_confirm_password) {
+                return res.status(400).json({ message: "A senha e a confirmação precisam ser iguais!" })
+            }
+            const saltRounds = 10;
+            const passwordHash: string = bcrypt.hashSync(use_password, saltRounds);
+
+
+            await prisma.users.create({
+                data: {
+                    use_email: use_email,
+                    use_password: passwordHash,
+                    use_name: use_name
+
+                }
+            })
+
+            //Um fluxo que envia um email para o usuário cadastrado confirmando o sucesso do registro
+
+            // const emailBody = `
+            //     <p>Olá,${use_name}</p>
+            //     <p>Agradecemos por se cadastrar em nosso Gerenciador de Tarefas!</p>
+
+            // `;
+
+            // const mailOptions = {
+            //     from: "",
+            //     to: [use_email],
+            //     subject: "Registro efetuado com sucesso!",
+            //     html: emailBody,
+            // };
+
+            // // Enviar o email
+            // transporter.sendMail(mailOptions, function (error, info) {
+            //     if (error) {
+            //         console.error(error);
+            //         return res.status(500).json({ message: "Erro ao enviar o email." });
+            //     } else {
+            //         return res.status(200).json({
+
+            //             message: "Email enviado com sucesso! ",
+            //         });
+            //     }
+            // });
+            return res.status(200).json({ message: 'Seus dados foram cadastrados com sucesso!' })
 
         } catch (error) {
 
-            return res.status(500).json({ message: `Não foi possível registrar seus dados! ${error}` })
+            return res.status(400).json({ message: `Não foi possível registrar seus dados! ${error}` })
+
 
         }
+
     }
 
 

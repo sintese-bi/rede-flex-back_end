@@ -1,28 +1,35 @@
 import { Prisma } from "@prisma/client";
 import { Request, Response, application } from "express";
 import { PrismaClient } from "@prisma/client";
+import { MongoClient, ServerApiVersion } from 'mongodb';
+const uri = "mongodb+srv://DanielRedeFlex:jmfgf4tWuRoxPzzt@clusterredeflex.japcfi4.mongodb.net/?retryWrites=true&w=majority&appName=ClusterRedeFlex";
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
 const prisma = new PrismaClient();
 
 class WhatsAppController {
-    public async wppInfo(req: Request, res: Response) {
+    public async wppInfo() {
         try {
-
-
-
-
-
-
-
-        } catch (error) {
-
-            return res.status(500).json({ message: `Não foi possível registrar seus dados! ${error}` })
-
-
+            // Connect the client to the server	(optional starting in v4.7)
+            await client.connect();
+            // Send a ping to confirm a successful connection
+            await client.db("admin").command({ ping: 1 });
+            console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        } finally {
+            // Ensures that the client will close when you finish/error
+            await client.close();
         }
 
     }
 
 
 }
-
+const teste = new WhatsAppController()
+teste.wppInfo().catch(console.dir);
 export default new WhatsAppController()
