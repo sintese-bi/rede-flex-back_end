@@ -152,7 +152,63 @@ class UserController {
 
         }
     }
+    //Inicia o processo de recuperação de senha enviando um email com um link de token único para o usuário. 
+    //Também atualiza o registro do usuário com o token gerado.
+    public async sendEmail(req: Request, res: Response) {
+        try {
+            const { use_email }: { use_email: string } = req.body;
 
+            const search = await prisma.users.findFirst({ select: { use_uuid: true }, where: { use_email } });
+            if (!search) {
+                return res.status(400).json({ message: "Esse email não existe!" });
+            }
+            const secret = process.env.SECRET;
+            if (secret === undefined) {
+                return res.status(400).json({ message: "A variável de ambiente SECRET não está definida." });
+            }
+            const use_token: string = jwt.sign(
+                { id: search.use_uuid },
+                secret,
+                { expiresIn: '1h' }
+            );
+            const saltRounds = 10;
+            const passwordHash: string = await bcrypt.hashSync(use_token, saltRounds);
+            await prisma.users.update({
+
+                data: { use_token: passwordHash },
+                where: { use_uuid: search.use_uuid },
+            });
+
+
+            const mailOptions = {
+                from: "noreplyredeflex@gmail.com",
+                to: ["bisintese@gmail.com", "eloymjunior00@gmail.com"],
+                subject: "Recuperação de Senha",
+                html: `
+                <p>Clique no link abaixo para recuperar sua senha do Dashboard RedeFlex:</p>
+                <a href="https://dashboard.redeflex.com.br/passwordaRecovery?use_token=${use_token}&use_email=${use_email}">Recuperar Senha</a>
+              `,
+            };
+
+            // Enviar o email
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.error(error);
+                    return res.status(500).json({ message: "Erro ao enviar o email." });
+                } else {
+                    return res.status(200).json({
+                        token: use_token,
+                        message: "Token enviado para o email inserido!",
+                    });
+                }
+            });
+        } catch (error) {
+            console.error(error);
+            return res
+                .status(500)
+                .json({ message: "Erro ao criar ou atualizar o token." });
+        }
+    }
 }
 
 export default new UserController()

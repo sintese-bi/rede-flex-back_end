@@ -21,7 +21,7 @@ model users {
   use_created_at       DateTime  @default(now()) @db.Timestamp(6)
   use_updated_at       DateTime  @default(now()) @db.Timestamp(6)
   use_date_expire      DateTime?
-  use_token            String?   @db.VarChar(50)
+  use_token            String?   @db.VarChar(255)
   use_whats_app        String?   @db.VarChar(20)
   use_margem_gc        Boolean?
   use_margem_al        Boolean?
