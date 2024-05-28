@@ -78,7 +78,7 @@ class UserController {
 
             // const emailBody = `
             //     <p>Olá,${use_name}</p>
-            //     <p>Agradecemos por se cadastrar em nosso Gerenciador de Tarefas!</p>
+            //     <p>Seu registro foi efetuado com sucesso!</p>
 
             // `;
 
