@@ -4,8 +4,11 @@ import { Request, Response, application } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import moment from "moment"
+import dotenv from "dotenv"
+dotenv.config();
 // import cron from "node-cron"
 import jwt from 'jsonwebtoken'; const prisma = new PrismaClient();
+const pass = process.env.PASSGMAIL
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: "smtp.gmail.com",
@@ -13,8 +16,8 @@ const transporter = nodemailer.createTransport({
 
     secure: false,//Usar "false" para ambiente de desenvolvimento
     auth: {
-        user: "",
-        pass: process.env.PASSGMAIL,
+        user: "noreplyredeflex@gmail.com",
+        pass: pass,
     },
     tls: {
         rejectUnauthorized: false, //Usar "false" para ambiente de desenvolvimento
@@ -64,7 +67,6 @@ class UserController {
             const saltRounds = 10;
             const passwordHash: string = bcrypt.hashSync(use_password, saltRounds);
 
-
             await prisma.users.create({
                 data: {
                     use_email: use_email,
@@ -74,44 +76,82 @@ class UserController {
                 }
             })
 
-            //Um fluxo que envia um email para o usuário cadastrado confirmando o sucesso do registro
+            const emailBody = `
+                <p>Olá,${use_name}</p>
+                <p>Seu registro foi efetuado com sucesso!</p>
 
-            // const emailBody = `
-            //     <p>Olá,${use_name}</p>
-            //     <p>Seu registro foi efetuado com sucesso!</p>
+            `;
 
-            // `;
+            const mailOptions = {
+                from: "noreplyredeflex@gmail.com",
+                to: [use_email],
+                subject: "Registro efetuado com sucesso!",
+                html: emailBody,
+            };
 
-            // const mailOptions = {
-            //     from: "",
-            //     to: [use_email],
-            //     subject: "Registro efetuado com sucesso!",
-            //     html: emailBody,
-            // };
+            // Enviar o email
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.error(error);
+                    return res.status(500).json({ message: "Erro ao enviar o email." });
+                } else {
+                    return res.status(200).json({
 
-            // // Enviar o email
-            // transporter.sendMail(mailOptions, function (error, info) {
-            //     if (error) {
-            //         console.error(error);
-            //         return res.status(500).json({ message: "Erro ao enviar o email." });
-            //     } else {
-            //         return res.status(200).json({
-
-            //             message: "Email enviado com sucesso! ",
-            //         });
-            //     }
-            // });
+                        message: "Email enviado com sucesso! ",
+                    });
+                }
+            });
             return res.status(200).json({ message: 'Seus dados foram cadastrados com sucesso!' })
 
         } catch (error) {
-
             return res.status(400).json({ message: `Não foi possível registrar seus dados! ${error}` })
-
-
         }
 
     }
+    public async login(req: Request, res: Response) {
+        try {
 
+            const { use_email, use_password }: { use_email: string, use_password: string } = req.body
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!emailRegex.test(use_email)) {
+                return res.status(400).json({ message: "O email não é válido." });
+            }
+            const existingEmail = await prisma.users.findFirst(
+                {
+                    select: { use_uuid: true, use_email: true, use_password: true, use_name: true, },
+                    where: { use_email: use_email }
+                }
+
+            )
+
+            const result = existingEmail?.use_password
+            if (!existingEmail) {
+                return res.status(404).json({ message: "Este email não existe em nosso banco de dados!" })
+            }
+
+            const checkPassword: boolean = result ? bcrypt.compareSync(use_password, result) : false;
+            if (!checkPassword) {
+                return res.status(404).json({ message: "Senha inválida" });
+            }
+
+            const secret = process.env.SECRET;
+
+            if (secret === undefined) {
+                return res.status(400).json({ message: "A variável de ambiente SECRET não está definida." });
+            }
+
+            const token: string = jwt.sign(
+                { id: existingEmail.use_uuid },
+                secret,
+
+            );
+
+            return res.status(200).json({ message: "Login efetuado com sucesso!", acesso: token, use_id: existingEmail.use_uuid, use_name: existingEmail.use_name });
+        } catch (error) {
+            return res.status(400).json({ message: `Não foi possível logar no aplicativo!${error}` })
+
+        }
+    }
 
 }
 
