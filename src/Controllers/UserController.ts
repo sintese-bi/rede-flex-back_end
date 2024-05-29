@@ -37,6 +37,7 @@ interface Recover {
 
 }
 class UserController {
+    //Controlador de registro do usuário
     public async registerUsers(req: Request, res: Response) {
         try {
 
@@ -108,6 +109,7 @@ class UserController {
         }
 
     }
+    //Controlador de login do usuário
     public async login(req: Request, res: Response) {
         try {
 
@@ -209,6 +211,7 @@ class UserController {
                 .json({ message: "Erro ao criar ou atualizar o token." });
         }
     }
+    //Controlador que cria uma nova senha para o usuário
     public async passwordRecover(req: Request, res: Response) {
         try {
             const { use_email, use_token } = req.query as { use_email?: string, use_token?: string };
