@@ -14,13 +14,13 @@ const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
 
-    secure: false,//Usar "false" para ambiente de desenvolvimento
+    secure: true,//Usar "false" para ambiente de desenvolvimento
     auth: {
         user: "noreplyredeflex@gmail.com",
         pass: pass,
     },
     tls: {
-        rejectUnauthorized: false, //Usar "false" para ambiente de desenvolvimento
+        rejectUnauthorized: true, //Usar "false" para ambiente de desenvolvimento
     },
 });
 interface Users {
@@ -172,7 +172,7 @@ class UserController {
                 { expiresIn: '1h' }
             );
             const saltRounds = 10;
-            const passwordHash: string = await bcrypt.hashSync(use_token, saltRounds);
+            const passwordHash: string = bcrypt.hashSync(use_token, saltRounds);
             await prisma.users.update({
 
                 data: { use_token: passwordHash },
@@ -182,11 +182,11 @@ class UserController {
 
             const mailOptions = {
                 from: "noreplyredeflex@gmail.com",
-                to: ["bisintese@gmail.com", "eloymjunior00@gmail.com"],
+                to: use_email,
                 subject: "Recuperação de Senha",
                 html: `
                 <p>Clique no link abaixo para recuperar sua senha do Dashboard RedeFlex:</p>
-                <a href="https://dashboard.redeflex.com.br/passwordaRecovery?use_token=${use_token}&use_email=${use_email}">Recuperar Senha</a>
+                <a href="https://dashboard.redeflex.com.br/passwordRecovery?use_token=${use_token}&use_email=${use_email}">Recuperar Senha</a>
               `,
             };
 
@@ -207,6 +207,90 @@ class UserController {
             return res
                 .status(500)
                 .json({ message: "Erro ao criar ou atualizar o token." });
+        }
+    }
+    public async passwordRecover(req: Request, res: Response) {
+        try {
+            const { use_email, use_token } = req.query as { use_email?: string, use_token?: string };
+
+            if (!use_email || !use_token) {
+                return res.status(400).json({ message: "Parâmetros ausentes na query." });
+            }
+
+            const search = await prisma.users.findFirst({ select: { use_uuid: true, use_token: true }, where: { use_email } });
+            if (!search) {
+                return res.status(400).json({ message: "Esse email não existe!" });
+            }
+            const result: string = search!.use_token!;
+            const checkPassword: boolean = await bcrypt.compareSync(use_token!, result);
+            if (!checkPassword) {
+                return res.status(401).json({ message: "O Token é inválido!" })
+            }
+            const { use_password } = req.body;
+
+            const user = await prisma.users.findUnique({
+                where: {
+                    use_uuid: search.use_uuid,
+                    use_token: result
+                },
+            });
+
+            if (!user) {
+                return res.status(400).json({ message: "Token ou email inválido." });
+            }
+
+            try {
+                const secret = process.env.SECRET;
+                if (secret === undefined) {
+                    return res.status(400).json({ message: "A variável de ambiente SECRET não está definida." });
+                }
+
+                const decoded = jwt.verify(use_token, secret) as jwt.JwtPayload;
+
+                if (typeof decoded === 'string') {
+                    return res.status(401).json({ message: "Token inválido." });
+                }
+
+                const currentTime = Date.now() / 1000;
+
+                if (decoded.exp && decoded.exp < currentTime) {
+                    return res.status(401).json({ message: "Token expirado." });
+                }
+            } catch (err) {
+                return res.status(401).json({ message: "Token inválido." });
+            }
+
+
+            if (use_password.length < 4) {
+                return res
+                    .status(400)
+                    .json({ message: "A senha precisa ter 4 ou mais caracteres!" });
+            }
+
+            const saltRounds = 10;
+
+            const passwordHash: string = bcrypt.hashSync(use_password, saltRounds);
+
+            await prisma.users.update({
+
+                data: { use_token: null },
+                where: { use_uuid: search.use_uuid },
+            });
+
+            await prisma.users.update({
+                data: { use_password: passwordHash },
+
+                where: { use_uuid: search.use_uuid }
+
+            }
+            );
+
+            return res.status(200).json({
+                message: "Senha atualizada com sucesso!",
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Erro ao criar nova senha!" });
         }
     }
 }
