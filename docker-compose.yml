@@ -10,7 +10,7 @@ services:
       - ./:/app
       - ./src/server.js:/server.js
     ports:
-      - '2021:2020'
+      - '3051:3051'
    
 
   prod:
@@ -21,7 +21,7 @@ services:
     volumes:
       - ./:/app
     ports:
-      - '2020:2020'
+      - '3051:3051'
     
       
 
