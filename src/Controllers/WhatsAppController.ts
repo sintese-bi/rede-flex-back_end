@@ -2,15 +2,19 @@ import { Prisma } from "@prisma/client";
 import { Request, Response, application } from "express";
 import { PrismaClient } from "@prisma/client";
 import { MongoClient, ServerApiVersion } from 'mongodb';
-const uri = "mongodb+srv://DanielRedeFlex:jmfgf4tWuRoxPzzt@clusterredeflex.japcfi4.mongodb.net/?retryWrites=true&w=majority&appName=ClusterRedeFlex";
+const uri: string | undefined = process.env.MONGODBCREDENCIALS
+let client: any
+if (uri) {
+    client = new MongoClient(uri, {
+        serverApi: {
+            version: ServerApiVersion.v1,
+            strict: true,
+            deprecationErrors: true,
+        }
+    });
+}
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
+
 const prisma = new PrismaClient();
 
 class WhatsAppController {
