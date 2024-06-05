@@ -8,7 +8,7 @@ const PORT = 8080;
 const apiVersion = "v1";
 
 const corsOptions = {
-    origin: ["http://localhost:3333"]
+    origin: [/https:\/\/redeflexbi\.com\.br($|\/.*)/, "http://localhost:3000"]
 };
 
 
