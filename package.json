@@ -13,7 +13,6 @@
     "@types/nodemailer": "^6.4.15",
     "@types/pdfkit": "^0.13.4",
     "bcrypt": "^5.1.1",
-    "canvas": "^2.11.2",
     "chart": "^0.1.2",
     "chart.js": "^4.4.3",
     "cors": "^2.8.5",
