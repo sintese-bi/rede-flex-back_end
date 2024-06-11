@@ -8,7 +8,7 @@ const PORT = 8080;
 const apiVersion = "v1";
 
 const corsOptions = {
-    origin: ["http://localhost:3333"]
+    origin: [/https:\/\/redeflexbi\.com\.br($|\/.*)/, "http://localhost:3000"]
 };
 
 
@@ -22,7 +22,7 @@ app.get(`/${apiVersion}`, function (req, res) {
 app.use(express.json());
 app.use(`/${apiVersion}`, variableRouter);
 app.use(`/${apiVersion}`, userRouter);
-app.use(`/${apiVersion}`, wppRouter);
+// app.use(`/${apiVersion}`, wppRouter);
 app.listen(PORT, () =>
     console.log(`✨ Server started on ${PORT}`)
 );
