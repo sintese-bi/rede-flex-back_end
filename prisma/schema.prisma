@@ -61,3 +61,18 @@ model rd_posto {
   // Relacionamento inverso
   posto_signals posto_signal[]
 }
+
+model basedados {
+  company_uuid       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  company_emp        Int?
+  company_name       String?   @db.VarChar(50)
+  company_date       DateTime? @db.Date  
+  company_week_day   String?   @db.VarChar(50)
+  company_fuel       String?   @db.VarChar(50)
+  company_volume     Float?    @db.Real
+  company_cost       Float?    @db.Real
+  company_sale       Float?    @db.Real
+  company_profit     Float?    @db.Real
+  company_created_at DateTime  @default(now()) @db.Timestamp(6)
+  company_updated_at DateTime  @default(now()) @db.Timestamp(6)
+}

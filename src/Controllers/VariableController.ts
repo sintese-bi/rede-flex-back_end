@@ -86,6 +86,70 @@ class VariablesController {
 
         }
     }
+    public async dataBaseAll(req: Request, res: Response) {
+        try {
+
+            const result = await prisma.basedados.findMany({
+                select: {
+
+                    company_emp: true,
+                    company_name: true,
+                    company_date: true,
+                    company_week_day: true,
+                    company_fuel: true,
+                    company_volume: true,
+                    company_cost: true,
+                    company_sale: true,
+                    company_profit: true,
+
+                },
+            });
+
+            return res.status(200).json({ message: result })
+
+
+        } catch (error) {
+
+
+            return res.status(500).json({ message: `Não foi possível retornar seus dados! ${error}` })
+        }
+    }
+
+
+    public async dataBaseCompany(req: Request, res: Response) {
+        try {
+            const { company_name, company_emp } = req.body;
+            const result = await prisma.basedados.findFirst({
+                select: {
+
+                    company_emp: true,
+                    company_name: true,
+                    company_date: true,
+                    company_week_day: true,
+                    company_fuel: true,
+                    company_volume: true,
+                    company_cost: true,
+                    company_sale: true,
+                    company_profit: true,
+
+                },
+                where: { company_emp: company_emp, company_name: company_name }
+            });
+
+            return res.status(200).json({ message: result })
+
+
+        } catch (error) {
+
+
+            return res.status(500).json({ message: `Não foi possível retornar seus dados! ${error}` })
+        }
+    }
+
+
+
+
+
 
 
 }
