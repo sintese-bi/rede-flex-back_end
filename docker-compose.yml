@@ -10,7 +10,7 @@ services:
       - ./:/app
       - ./src/server.js:/server.js
     ports:
-      - '3051:3051'
+      - '8080:8080'
    
 
   prod:
@@ -21,6 +21,6 @@ services:
     volumes:
       - ./:/app
     ports:
-      - '3051:3051'
+      - '8080:8080'
     
       
