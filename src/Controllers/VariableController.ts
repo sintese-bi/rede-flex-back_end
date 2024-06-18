@@ -105,7 +105,7 @@ class VariablesController {
                 },
             });
 
-            return res.status(200).json({ message: result })
+            return res.status(200).json({ data: result })
 
 
         } catch (error) {
