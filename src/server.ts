@@ -2,9 +2,10 @@ import express from "express";
 import cors from "cors";
 import variableRouter from "../routes/variable";
 import userRouter from "../routes/user";
+import wppRouter from "../routes/wpp";
 // import wppRouter from "../routes/wpp";
 const app = express();
-const PORT = 3051;
+const PORT = 8080;
 const apiVersion = "v1";
 
 const corsOptions = {
@@ -21,8 +22,9 @@ app.get(`/${apiVersion}`, function (req, res) {
 
 app.use(express.json());
 app.use(`/${apiVersion}`, variableRouter);
-app.use(`/${apiVersion}`, userRouter);
 // app.use(`/${apiVersion}`, wppRouter);
+app.use(`/${apiVersion}`, userRouter);
+
 app.listen(PORT, () =>
     console.log(`✨ Server started on ${PORT}`)
 );
