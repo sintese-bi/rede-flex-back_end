@@ -176,7 +176,7 @@ class VariablesController {
                 const resultFuel_1 = resultFuel?.fuel_alcohol ?? 0
                 const resultFuel_2 = resultFuel?.fuel_regular_gasoline ?? 0
 
-                return res.status(200).json({ data: [{ set_value_alcohol1: resultSet_1, set_value_gasoline2: resultSet_2, fuel_value_alcohol1: resultFuel_1, fuel_value2_gasoline: resultFuel_2 }] })
+                return res.status(200).json({ data: [{ set_value_alcohol: resultSet_1, set_value_gasoline: resultSet_2, fuel_value_alcohol: resultFuel_1, fuel_value_gasoline: resultFuel_2 }] })
 
             } else {
                 return res
