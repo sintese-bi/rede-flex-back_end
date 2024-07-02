@@ -35,6 +35,7 @@ model users {
   use_volume_gc_min    Float?
   use_volume_al_min    Float?
   use_volume_total_min Float?
+  use_level            String?         @db.VarChar(20)
   set_variables        set_variables[]
   fuel                 fuel[]
 }

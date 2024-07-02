@@ -120,7 +120,7 @@ class UserController {
             }
             const existingEmail = await prisma.users.findFirst(
                 {
-                    select: { use_uuid: true, use_email: true, use_password: true, use_name: true, },
+                    select: { use_uuid: true, use_email: true, use_password: true, use_name: true, use_level:true },
                     where: { use_email: use_email }
                 }
 
