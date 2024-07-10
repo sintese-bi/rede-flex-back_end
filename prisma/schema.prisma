@@ -14,30 +14,36 @@ datasource db {
 }
 
 model users {
-  use_uuid             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  use_name             String?         @db.VarChar(100)
-  use_email            String?         @db.VarChar(50)
-  use_password         String?         @db.VarChar(255)
-  use_created_at       DateTime        @default(now()) @db.Timestamp(6)
-  use_updated_at       DateTime        @default(now()) @db.Timestamp(6)
-  use_date_expire      DateTime?
-  use_token            String?         @db.VarChar(255)
-  use_whats_app        String?         @db.VarChar(20)
-  use_margem_gc        Boolean?
-  use_margem_al        Boolean?
-  use_margem_total     Boolean?
-  use_volume_gc        Boolean?
-  use_volume_al        Boolean?
-  use_volume_total     Boolean?
-  use_margem_gc_min    Float?
-  use_margem_al_min    Float?
-  use_margem_total_min Float?
-  use_volume_gc_min    Float?
-  use_volume_al_min    Float?
-  use_volume_total_min Float?
-  use_level            String?         @db.VarChar(20)
-  set_variables        set_variables[]
-  fuel                 fuel[]
+  use_uuid              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  use_name              String?   @db.VarChar(100)
+  use_email             String?   @db.VarChar(50)
+  use_password          String?   @db.VarChar(255)
+  use_created_at        DateTime  @default(now()) @db.Timestamp(6)
+  use_updated_at        DateTime  @default(now()) @db.Timestamp(6)
+  use_date_expire       DateTime?
+  use_token             String?   @db.VarChar(255)
+  use_whats_app         String[]  @db.VarChar(255)
+  use_margin_gc         Boolean?
+  use_margin_al         Boolean?
+  use_margin_total      Boolean?
+  use_volume_gc         Boolean?
+  use_volume_al         Boolean?
+  use_volume_total      Boolean?
+  use_margin_gc_min     Float?
+  use_margin_al_min     Float?
+  use_margin_total_min  Float?
+  use_volume_gc_min     Float?
+  use_volume_al_min     Float?
+  use_volume_total_min  Float?
+  use_margin_gc_flag    String?   @db.VarChar(20)
+  use_margin_al_flag    String?   @db.VarChar(20)
+  use_margin_total_flag String?   @db.VarChar(20)
+  use_volume_gc_flag    String?   @db.VarChar(20)
+  use_volume_al_flag    String?   @db.VarChar(20)
+  use_volume_total_flag String?   @db.VarChar(20)
+  use_level     String?         @db.VarChar(20)
+  set_variables set_variables[]
+  fuel          fuel[]
 }
 
 model posto_signal {
