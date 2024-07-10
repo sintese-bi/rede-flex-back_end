@@ -148,7 +148,7 @@ class UserController {
 
             );
 
-            return res.status(200).json({ message: "Login efetuado com sucesso!", acesso: token, use_id: existingEmail.use_uuid, use_name: existingEmail.use_name });
+            return res.status(200).json({ message: "Login efetuado com sucesso!", acesso: token, use_id: existingEmail.use_uuid, use_name: existingEmail.use_name,use_level:existingEmail.use_level });
         } catch (error) {
             return res.status(400).json({ message: `Não foi possível logar no aplicativo!${error}` })
 

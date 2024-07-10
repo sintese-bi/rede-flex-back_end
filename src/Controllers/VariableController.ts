@@ -23,59 +23,79 @@ const transporter = nodemailer.createTransport({
 });
 
 interface Variables {
+    use_uuid: string,
     use_name?: string;
-    use_whats_app?: string;
-    use_margem_gc?: boolean;
-    use_margem_al?: boolean;
-    use_margem_total?: boolean;
+    use_whats_app?: string[];
+    use_margin_gc?: boolean;
+    use_margin_al?: boolean;
+    use_margin_total?: boolean;
     use_volume_gc?: boolean;
     use_volume_al?: boolean;
     use_volume_total?: boolean;
-    use_margem_gc_min?: number;
-    use_margem_al_min?: number;
-    use_margem_total_min?: number;
+    use_margin_gc_min?: number;
+    use_margin_al_min?: number;
+    use_margin_total_min?: number;
     use_volume_gc_min?: number;
     use_volume_al_min?: number;
     use_volume_total_min?: number;
+    use_margin_gc_flag: string;
+    use_margin_al_flag: string;
+    use_margin_total_flag: string;
+    use_volume_gc_flag: string;
+    use_volume_al_flag: string;
+    use_volume_total_flag: string;
+
 }
 
 class VariablesController {
     public async setVariables(req: Request, res: Response) {
         try {
             const {
-                use_name,
+                use_uuid,
                 use_whats_app,
-                use_margem_gc,
-                use_margem_al,
-                use_margem_total,
+                use_margin_gc,
+                use_margin_al,
+                use_margin_total,
                 use_volume_gc,
                 use_volume_al,
                 use_volume_total,
-                use_margem_gc_min,
-                use_margem_al_min,
-                use_margem_total_min,
+                use_margin_gc_min,
+                use_margin_al_min,
+                use_margin_total_min,
                 use_volume_gc_min,
                 use_volume_al_min,
                 use_volume_total_min,
+                use_margin_gc_flag,
+                use_margin_al_flag,
+                use_margin_total_flag,
+                use_volume_gc_flag,
+                use_volume_al_flag,
+                use_volume_total_flag,
             }: Variables = req.body;
 
             await prisma.users.updateMany({
                 data: {
                     use_whats_app: use_whats_app,
-                    use_margem_gc: use_margem_gc,
-                    use_margem_al: use_margem_al,
-                    use_margem_total: use_margem_total,
+                    use_margin_gc: use_margin_gc,
+                    use_margin_al: use_margin_al,
+                    use_margin_total: use_margin_total,
                     use_volume_gc: use_volume_gc,
                     use_volume_al: use_volume_al,
                     use_volume_total: use_volume_total,
-                    use_margem_gc_min: use_margem_gc_min,
-                    use_margem_al_min: use_margem_al_min,
-                    use_margem_total_min: use_margem_total_min,
+                    use_margin_gc_min: use_margin_gc_min,
+                    use_margin_al_min: use_margin_al_min,
+                    use_margin_total_min: use_margin_total_min,
                     use_volume_gc_min: use_volume_gc_min,
                     use_volume_al_min: use_volume_al_min,
                     use_volume_total_min: use_volume_total_min,
+                    use_margin_gc_flag: use_margin_gc_flag,
+                    use_margin_al_flag: use_margin_al_flag,
+                    use_margin_total_flag: use_margin_total_flag,
+                    use_volume_gc_flag: use_volume_gc_flag,
+                    use_volume_al_flag: use_volume_al_flag,
+                    use_volume_total_flag: use_volume_total_flag
                 },
-                where: { use_name: use_name }
+                where: { use_uuid: use_uuid }
             })
             return res.status(200).json({ message: "Os dados foram atualizados com sucesso!" })
 

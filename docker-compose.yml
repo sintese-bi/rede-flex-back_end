@@ -5,7 +5,7 @@ services:
     container_name: rede-flex-back_end-dev
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - ./:/app
       - ./src/server.js:/server.js
@@ -17,9 +17,10 @@ services:
     container_name: rede-flex-back_end-prod
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     volumes:
       - ./:/app
+      - ./src/server.js:/server.js
     ports:
       - '3051:3051'
     
