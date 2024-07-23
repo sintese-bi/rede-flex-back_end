@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { Request, Response, application } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import axios from 'axios';
 import moment from "moment"
 // import cron from "node-cron"
 import jwt from 'jsonwebtoken';
@@ -214,6 +215,32 @@ class VariablesController {
 
 
     // }
+
+
+    public async variableName(req: Request, res: Response) {
+        try {
+            const token = process.env.TOKENMONGO;
+
+            const result = await axios.get(
+                "http://localhost:8080/v1/infodata",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return res.status(200).json(result.data);
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` });
+
+        }
+
+    }
+
+
+
 
 
 }
