@@ -238,7 +238,27 @@ class VariablesController {
         }
 
     }
+    public async SumFuelProduct(req: Request, res: Response) {
+        try {
+            const token = process.env.TOKENMONGO;
 
+            const result = await axios.get(
+                "http://localhost:8080/v1/sum-fuel-literage",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return res.status(200).json(result.data);
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` });
+
+        }
+
+    }
 
 
 
