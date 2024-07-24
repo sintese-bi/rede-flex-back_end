@@ -188,7 +188,7 @@ class UserController {
                 subject: "Recuperação de Senha",
                 html: `
                 <p>Clique no link abaixo para recuperar sua senha do Dashboard RedeFlex:</p>
-                <a href="https://dashboard.redeflex.com.br/passwordRecovery?use_token=${use_token}&use_email=${use_email}">Recuperar Senha</a>
+                <a href="https://redeflexbi.com.br/dashboard/password_recovery?use_token=${use_token}&use_email=${use_email}">Recuperar Senha</a>
               `,
             };
 
