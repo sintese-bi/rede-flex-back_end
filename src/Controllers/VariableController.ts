@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { Request, Response, application } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import axios from 'axios';
 import moment from "moment"
 // import cron from "node-cron"
 import jwt from 'jsonwebtoken';
@@ -214,6 +215,72 @@ class VariablesController {
 
 
     // }
+
+
+    public async variableName(req: Request, res: Response) {
+        try {
+            const token = process.env.TOKENMONGO;
+
+            const result = await axios.get(
+                "http://159.65.42.225:3052/v1/infodata",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return res.status(200).json(result.data);
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` });
+
+        }
+
+    }
+    public async SumFuelProduct(req: Request, res: Response) {
+        try {
+            const token = process.env.TOKENMONGO;
+
+            const result = await axios.get(
+                "http://159.65.42.225:3052/v1/sum-fuel-literage",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return res.status(200).json(result.data);
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` });
+
+        }
+
+    }
+    public async dataFrameGallonage(req: Request, res: Response) {
+        try {
+            const token = process.env.TOKENMONGO;
+
+            const result = await axios.get(
+                "http://159.65.42.225:3052/v1/dataframe-gallonage",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return res.status(200).json(result.data);
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` });
+
+        }
+
+    }
+
 
 
 }
