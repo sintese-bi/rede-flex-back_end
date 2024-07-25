@@ -222,7 +222,7 @@ class VariablesController {
             const token = process.env.TOKENMONGO;
 
             const result = await axios.get(
-                "http://localhost:3052/v1/infodata",
+                "http://159.65.42.225:3052/v1/infodata",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -243,7 +243,7 @@ class VariablesController {
             const token = process.env.TOKENMONGO;
 
             const result = await axios.get(
-                "http://localhost:3052/v1/sum-fuel-literage",
+                "http://159.65.42.225:3052/v1/sum-fuel-literage",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -264,7 +264,7 @@ class VariablesController {
             const token = process.env.TOKENMONGO;
 
             const result = await axios.get(
-                "http://localhost:3052/v1/dataframe-gallonage",
+                "http://159.65.42.225:3052/v1/dataframe-gallonage",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
