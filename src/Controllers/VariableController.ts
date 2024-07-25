@@ -280,7 +280,28 @@ class VariablesController {
         }
 
     }
+    public async dataFrameFuel(req: Request, res: Response) {
+        try { 
 
+ const token = process.env.TOKENMONGO;
+
+            const result = await axios.get(
+                "http://159.65.42.225:3052/v1/dataframe-fuel",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            return res.status(200).json(result.data);
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` })
+        }
+
+
+    }
 
 
 }
