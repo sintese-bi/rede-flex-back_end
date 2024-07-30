@@ -281,9 +281,9 @@ class VariablesController {
 
     }
     public async dataFrameFuel(req: Request, res: Response) {
-        try { 
+        try {
 
- const token = process.env.TOKENMONGO;
+            const token = process.env.TOKENMONGO;
 
             const result = await axios.get(
                 "http://159.65.42.225:3052/v1/dataframe-fuel",
@@ -295,6 +295,24 @@ class VariablesController {
             );
 
             return res.status(200).json(result.data);
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` })
+        }
+
+
+    }
+    public async mapPosition(req: Request, res: Response) {
+        try {
+
+            const result = await prisma.ibm_info.findMany({
+                select: {
+                    lat: true, long: true, nomefantasia: true
+                }
+            })
+
+            return res.status(200).json({ data: result })
+
 
         } catch (error) {
             return res.status(500).json({ message: `Erro: ${error}` })
