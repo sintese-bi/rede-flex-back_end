@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,60 +8,56 @@ datasource db {
 }
 
 model users {
-  use_uuid              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  use_name              String?   @db.VarChar(100)
-  use_email             String?   @db.VarChar(50)
-  use_password          String?   @db.VarChar(255)
-  use_created_at        DateTime  @default(now()) @db.Timestamp(6)
-  use_updated_at        DateTime  @default(now()) @db.Timestamp(6)
+  use_uuid              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  use_name              String?         @db.VarChar(100)
+  use_email             String?         @db.VarChar(50)
+  use_password          String?         @db.VarChar(255)
+  use_created_at        DateTime        @default(now()) @db.Timestamp(6)
+  use_updated_at        DateTime        @default(now()) @db.Timestamp(6)
   use_date_expire       DateTime?
-  use_token             String?   @db.VarChar(255)
-  use_whats_app         String[]  @db.VarChar(255)
-  use_margin_gc         Boolean?
-  use_margin_al         Boolean?
-  use_margin_total      Boolean?
+  use_token             String?         @db.VarChar(255)
   use_volume_gc         Boolean?
   use_volume_al         Boolean?
   use_volume_total      Boolean?
-  use_margin_gc_min     Float?
-  use_margin_al_min     Float?
-  use_margin_total_min  Float?
   use_volume_gc_min     Float?
   use_volume_al_min     Float?
   use_volume_total_min  Float?
-  use_margin_gc_flag    String?   @db.VarChar(20)
-  use_margin_al_flag    String?   @db.VarChar(20)
-  use_margin_total_flag String?   @db.VarChar(20)
-  use_volume_gc_flag    String?   @db.VarChar(20)
-  use_volume_al_flag    String?   @db.VarChar(20)
-  use_volume_total_flag String?   @db.VarChar(20)
-  use_level     String?         @db.VarChar(20)
-  set_variables set_variables[]
-  fuel          fuel[]
+  use_level             String?         @db.VarChar(20)
+  use_whats_app         String[]        @db.VarChar(255)
+  use_margin_al         Boolean?
+  use_margin_al_flag    String?         @db.VarChar(20)
+  use_margin_al_min     Float?
+  use_margin_gc         Boolean?
+  use_margin_gc_flag    String?         @db.VarChar(20)
+  use_margin_gc_min     Float?
+  use_margin_total      Boolean?
+  use_margin_total_flag String?         @db.VarChar(20)
+  use_margin_total_min  Float?
+  use_volume_al_flag    String?         @db.VarChar(20)
+  use_volume_gc_flag    String?         @db.VarChar(20)
+  use_volume_total_flag String?         @db.VarChar(20)
+  fuel                  fuel[]
+  set_variables         set_variables[]
 }
 
 model posto_signal {
-  table_id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  posto_id      String?  @db.Uuid
-  vol_sold      Float?   @db.Real
-  vol_rate      Float?   @db.Real
-  vol_alert     String?  @db.VarChar(255)
-  invoicing     Float?   @db.Real
-  invoice_rate  Float?   @db.Real
-  invoice_alert String?  @db.VarChar(255)
-  created_at    DateTime @default(now()) @db.Timestamp
-
-  // Relacionamento com rd_posto
-  rd_posto rd_posto? @relation(fields: [posto_id], references: [posto_uuid])
+  table_id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  posto_id      String?   @db.Uuid
+  vol_sold      Float?    @db.Real
+  vol_rate      Float?    @db.Real
+  vol_alert     String?   @db.VarChar(255)
+  invoicing     Float?    @db.Real
+  invoice_rate  Float?    @db.Real
+  invoice_alert String?   @db.VarChar(255)
+  created_at    DateTime  @default(now()) @db.Timestamp(6)
+  rd_posto      rd_posto? @relation(fields: [posto_id], references: [posto_uuid])
 
   @@index([posto_id])
 }
 
 model rd_posto {
-  posto_uuid String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  posto_name String? @db.VarChar(255)
-
-  // Relacionamento inverso
+  posto_uuid    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  posto_name    String?        @db.VarChar(255)
   posto_signals posto_signal[]
 }
 
@@ -91,9 +81,9 @@ model fuel {
   fuel_regular_gasoline Float?   @db.Real
   fuel_alcohol          Float?   @db.Real
   use_uuid              String?  @db.Uuid
-  user                  users?   @relation(fields: [use_uuid], references: [use_uuid])
   fuel_created_at       DateTime @default(now()) @db.Timestamp(6)
   fuel_updated_at       DateTime @default(now()) @db.Timestamp(6)
+  user                  users?   @relation(fields: [use_uuid], references: [use_uuid])
 }
 
 model set_variables {
@@ -101,7 +91,18 @@ model set_variables {
   set_regular_gasoline Float?   @db.Real
   set_alcohol          Float?   @db.Real
   use_uuid             String?  @db.Uuid
-  user                 users?   @relation(fields: [use_uuid], references: [use_uuid])
   set_created_at       DateTime @default(now()) @db.Timestamp(6)
   set_updated_at       DateTime @default(now()) @db.Timestamp(6)
+  user                 users?   @relation(fields: [use_uuid], references: [use_uuid])
+}
+
+model ibm_info {
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ibm          String? @db.VarChar(255)
+  nomefantasia String? @db.VarChar(255)
+  cnpj         String? @db.VarChar(255)
+  razaosocial  String? @db.VarChar(255)
+  cep          String? @db.VarChar(255)
+  lat          Float?
+  long         Float?
 }
