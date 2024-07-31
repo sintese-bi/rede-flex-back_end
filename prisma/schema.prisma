@@ -106,3 +106,12 @@ model ibm_info {
   lat          Float?
   long         Float?
 }
+
+model gas_station {
+  gas_uuid       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gas_ibm        String?  @db.VarChar(255)
+  gas_fuel_type  String?  @db.VarChar(255)
+  gas_value      Float?
+  gas_created_at DateTime @default(now()) @db.Timestamp(6)
+  gas_updated_at DateTime @default(now()) @db.Timestamp(6)
+}
