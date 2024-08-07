@@ -7,4 +7,5 @@ userRouter.post("/register", UserController.registerUsers)
 userRouter.post("/login", UserController.login)
 userRouter.post(`/sendemail`, UserController.sendEmail)
 userRouter.post(`/password_recovery`, UserController.passwordRecover)
+userRouter.post(`/infowppnumbers`, UserController.setInfoWppNumbers)
 export default userRouter
