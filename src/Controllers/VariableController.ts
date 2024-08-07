@@ -4,6 +4,7 @@ import { Request, Response, application } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import axios from 'axios';
+import 'moment-timezone';
 import moment from "moment"
 // import cron from "node-cron"
 import jwt from 'jsonwebtoken';
@@ -280,28 +281,7 @@ class VariablesController {
         }
 
     }
-    public async dataFrameFuel(req: Request, res: Response) {
-        try {
 
-            const token = process.env.TOKENMONGO;
-
-            const result = await axios.get(
-                "http://159.65.42.225:3052/v1/dataframe-fuel",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            return res.status(200).json(result.data);
-
-        } catch (error) {
-            return res.status(500).json({ message: `Erro: ${error}` })
-        }
-
-
-    }
     public async mapPosition(req: Request, res: Response) {
         try {
 
@@ -336,6 +316,24 @@ class VariablesController {
 
             })
             return res.status(200).json({ data: adjustnames })
+
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` })
+        }
+
+    }
+    public async alertsMock(req: Request, res: Response) {
+        try {
+            const date = moment.tz('America/Sao_Paulo').format('DD-MM-YYYY')
+            const alerts = [{ date: date, variable_name: "marginGC", condition: "sanado" },
+            { date: date, variable_name: "marginAL", condition: "não sanado" },
+            { date: date, variable_name: "marginTotal", condition: "não sanado" },
+            { date: date, variable_name: "volumeGC", condition: "sanado" },
+            { date: date, variable_name: "volumeAL", condition: "não sanado" },
+            { date: date, variable_name: "volumeTotal", condition: "sanado" }]
+
+            return res.status(200).json({ data: alerts })
 
 
         } catch (error) {
