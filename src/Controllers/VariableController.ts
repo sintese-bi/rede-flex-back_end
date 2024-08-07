@@ -318,6 +318,29 @@ class VariablesController {
             return res.status(500).json({ message: `Erro: ${error}` })
         }
 
+    }
+    public async nameFuelStationMock(req: Request, res: Response) {
+
+        try {
+
+            const result = await prisma.ibm_info.findMany({
+                select: {
+                    nomefantasia: true
+                }
+            })
+            const adjustnames = result.map(element => {
+
+                return { name: element.nomefantasia }
+
+
+
+            })
+            return res.status(200).json({ data: adjustnames })
+
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` })
+        }
 
     }
 

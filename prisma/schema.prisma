@@ -112,6 +112,34 @@ model gas_station {
   gas_ibm        String?  @db.VarChar(255)
   gas_fuel_type  String?  @db.VarChar(255)
   gas_value      Float?
+  gas_identifier String?  @db.VarChar(255)
   gas_created_at DateTime @default(now()) @db.Timestamp(6)
   gas_updated_at DateTime @default(now()) @db.Timestamp(6)
+}
+
+model dataframe_fuel {
+  datafuel_uuid              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  datafuel_qtdAbastecimento  Float?
+  datafuel_vendaCombustivel  Float?
+  datafuel_litroCombustivel  Float?
+  datafuel_qtdProduto        Float?
+  datafuel_vendaProduto      Float?
+  datafuel_litroProduto      Float?
+  datafuel_qtdOutrosProdutos Float?
+  datafuel_vendasOutros      Float?
+  datafuel_litroOutros       Float?
+  datafuel_custo             Float?
+  datafuel_lucro             Float?
+  datafuel_dt_registro       String? @db.VarChar(255)
+  datafuel_updated           String? @db.VarChar(255)
+}
+
+model dataframe_product {
+  dataproduct_uuid                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  dataproduct_posto               String? @db.VarChar(255)
+  dataproduct_venda_produto       String? @db.VarChar(255)
+  dataproduct_valor_venda         Float?
+  dataproduct_qtd_produto_vendido Float?
+  dataproduct_dt_registro         String? @db.VarChar(255)
+  dataproduct_updated             String? @db.VarChar(255)
 }

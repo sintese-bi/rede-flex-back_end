@@ -120,7 +120,7 @@ class UserController {
             }
             const existingEmail = await prisma.users.findFirst(
                 {
-                    select: { use_uuid: true, use_email: true, use_password: true, use_name: true, use_level:true },
+                    select: { use_uuid: true, use_email: true, use_password: true, use_name: true, use_level: true },
                     where: { use_email: use_email }
                 }
 
@@ -148,7 +148,7 @@ class UserController {
 
             );
 
-            return res.status(200).json({ message: "Login efetuado com sucesso!", acesso: token, use_id: existingEmail.use_uuid, use_name: existingEmail.use_name,use_level:existingEmail.use_level });
+            return res.status(200).json({ message: "Login efetuado com sucesso!", acesso: token, use_id: existingEmail.use_uuid, use_name: existingEmail.use_name, use_level: existingEmail.use_level });
         } catch (error) {
             return res.status(400).json({ message: `Não foi possível logar no aplicativo!${error}` })
 
@@ -296,6 +296,51 @@ class UserController {
             return res.status(500).json({ message: "Erro ao criar nova senha!" });
         }
     }
+    //Api para armazenar informações para envio alertas Whatsapp
+    public async setInfoWppNumbers(req: Request, res: Response) {
+        try {
+
+            const { wppnumbers, use_uuid }: { wppnumbers: string[], use_uuid: string } = req.body
+
+            await prisma.users.update({
+                where: { use_uuid: use_uuid },
+                data: { use_whats_app: wppnumbers }
+            });
+
+
+
+
+        } catch (error) {
+            return res.status(400).json({ message: `Não foi possível registrar seus dados! ${error}` })
+        }
+
+
+
+    }
+    public async nameFuelStation(req: Request, res: Response) {
+        try {
+            
+
+
+
+
+        } catch (error) {
+            return res.status(400).json({ message: `Não foi possível registrar seus dados! ${error}` })
+        }
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
 }
 
 export default new UserController()
