@@ -4,8 +4,7 @@ import { Request, Response, application } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import axios from 'axios';
-import 'moment-timezone';
-import moment from "moment"
+import moment from 'moment-timezone';
 // import cron from "node-cron"
 import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
