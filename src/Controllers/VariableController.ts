@@ -286,7 +286,7 @@ class VariablesController {
             const token = process.env.TOKENMONGO;
 
             const info = await axios.get(
-                "http://localhost:3052/v1/map-data",
+                "http://159.65.42.225:3052/v1/map-data",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -294,16 +294,30 @@ class VariablesController {
                 }
             );
 
-
-
-
             const result = await prisma.ibm_info.findMany({
                 select: {
                     lat: true, long: true, nomefantasia: true, ibm: true
                 }
             })
 
-            return res.status(200).json({ data: info.data })
+            info.data.data.forEach((element: any) => {
+
+                result.forEach(values => {
+                    if (element.ibm === values.ibm) {
+
+                        Object.assign(values, { ...element });
+                    }
+
+                })
+
+            })
+
+
+
+
+
+
+            return res.status(200).json({ data: result })
 
 
         } catch (error) {
