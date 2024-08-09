@@ -105,6 +105,7 @@ model ibm_info {
   cep          String? @db.VarChar(255)
   lat          Float?
   long         Float?
+  endereco     String? @db.VarChar(255)
 }
 
 model gas_station {
@@ -118,20 +119,19 @@ model gas_station {
 }
 
 model dataframe_fuel {
-  datafuel_uuid              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  datafuel_qtdAbastecimento  Float?
-  datafuel_vendaCombustivel  Float?
-  datafuel_litroCombustivel  Float?
-  datafuel_qtdProduto        Float?
-  datafuel_vendaProduto      Float?
-  datafuel_litroProduto      Float?
-  datafuel_qtdOutrosProdutos Float?
-  datafuel_vendasOutros      Float?
-  datafuel_litroOutros       Float?
-  datafuel_custo             Float?
-  datafuel_lucro             Float?
-  datafuel_dt_registro       String? @db.VarChar(255)
-  datafuel_updated           String? @db.VarChar(255)
+  datafuel_uuid            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  datafuel_posto           String?  @db.VarChar(255)
+  datafuel_abastecimentos  Float?
+  datafuel_galonagem_litro Float?
+  datafuel_faturamento     Float?
+  datafuel_custo           Float?
+  datafuel_lucro           Float?
+  datafuel_topCombustivel  String?  @db.VarChar(255)
+  datafuel_dt_aval         DateTime @db.Date
+  datafuel_dayofweek       String?  @db.VarChar(255)
+  datafuel_regional        String?  @db.VarChar(255)
+  datafuel_created_at      DateTime @default(now()) @db.Timestamp(6)
+  datafuel_updated_at      DateTime @default(now()) @db.Timestamp(6)
 }
 
 model dataframe_product {
