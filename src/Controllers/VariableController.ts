@@ -283,12 +283,39 @@ class VariablesController {
 
     public async mapPosition(req: Request, res: Response) {
         try {
+            const token = process.env.TOKENMONGO;
+
+            const info = await axios.get(
+                "http://159.65.42.225:3052/v1/map-data",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             const result = await prisma.ibm_info.findMany({
                 select: {
-                    lat: true, long: true, nomefantasia: true
+                    lat: true, long: true, nomefantasia: true, ibm: true
                 }
             })
+
+            info.data.data.forEach((element: any) => {
+
+                result.forEach(values => {
+                    if (element.ibm === values.ibm) {
+
+                        Object.assign(values, { ...element });
+                    }
+
+                })
+
+            })
+
+
+
+
+
 
             return res.status(200).json({ data: result })
 
@@ -333,6 +360,19 @@ class VariablesController {
             { date: date, variable_name: "volumeTotal", condition: "sanado" }]
 
             return res.status(200).json({ data: alerts })
+
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` })
+        }
+
+    }
+    public async CEP(req: Request, res: Response) {
+        try {
+
+            const result = await axios.get("viacep.com.br/ws/01001000/json/")
+
+            return res.status(200).json({ data: result.data })
 
 
         } catch (error) {
