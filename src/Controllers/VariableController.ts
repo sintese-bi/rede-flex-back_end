@@ -23,90 +23,9 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-interface Variables {
-    use_uuid: string,
-    use_name?: string;
-    use_whats_app?: string[];
-    use_margin_gc?: boolean;
-    use_margin_al?: boolean;
-    use_margin_total?: boolean;
-    use_volume_gc?: boolean;
-    use_volume_al?: boolean;
-    use_volume_total?: boolean;
-    use_margin_gc_min?: number;
-    use_margin_al_min?: number;
-    use_margin_total_min?: number;
-    use_volume_gc_min?: number;
-    use_volume_al_min?: number;
-    use_volume_total_min?: number;
-    use_margin_gc_flag: string;
-    use_margin_al_flag: string;
-    use_margin_total_flag: string;
-    use_volume_gc_flag: string;
-    use_volume_al_flag: string;
-    use_volume_total_flag: string;
-
-}
 
 class VariablesController {
-    public async setVariables(req: Request, res: Response) {
-        try {
-            const {
-                use_uuid,
-                use_whats_app,
-                use_margin_gc,
-                use_margin_al,
-                use_margin_total,
-                use_volume_gc,
-                use_volume_al,
-                use_volume_total,
-                use_margin_gc_min,
-                use_margin_al_min,
-                use_margin_total_min,
-                use_volume_gc_min,
-                use_volume_al_min,
-                use_volume_total_min,
-                use_margin_gc_flag,
-                use_margin_al_flag,
-                use_margin_total_flag,
-                use_volume_gc_flag,
-                use_volume_al_flag,
-                use_volume_total_flag,
-            }: Variables = req.body;
 
-            await prisma.users.updateMany({
-                data: {
-                    use_whats_app: use_whats_app,
-                    use_margin_gc: use_margin_gc,
-                    use_margin_al: use_margin_al,
-                    use_margin_total: use_margin_total,
-                    use_volume_gc: use_volume_gc,
-                    use_volume_al: use_volume_al,
-                    use_volume_total: use_volume_total,
-                    use_margin_gc_min: use_margin_gc_min,
-                    use_margin_al_min: use_margin_al_min,
-                    use_margin_total_min: use_margin_total_min,
-                    use_volume_gc_min: use_volume_gc_min,
-                    use_volume_al_min: use_volume_al_min,
-                    use_volume_total_min: use_volume_total_min,
-                    use_margin_gc_flag: use_margin_gc_flag,
-                    use_margin_al_flag: use_margin_al_flag,
-                    use_margin_total_flag: use_margin_total_flag,
-                    use_volume_gc_flag: use_volume_gc_flag,
-                    use_volume_al_flag: use_volume_al_flag,
-                    use_volume_total_flag: use_volume_total_flag
-                },
-                where: { use_uuid: use_uuid }
-            })
-            return res.status(200).json({ message: "Os dados foram atualizados com sucesso!" })
-
-
-        } catch (error) {
-
-            return res.status(500).json({ message: `Não foi possível registrar seus dados! ${error}` })
-
-        }
-    }
     public async dataBaseAll(req: Request, res: Response) {
         try {
 
