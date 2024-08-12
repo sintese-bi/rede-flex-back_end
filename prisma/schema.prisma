@@ -16,8 +16,8 @@ model users {
   use_updated_at  DateTime  @default(now()) @db.Timestamp(6)
   use_date_expire DateTime?
   use_token       String?   @db.VarChar(255)
-  use_level     String?  @db.VarChar(20)
-  use_whats_app String[] @db.VarChar(255)
+  use_level       String?   @db.VarChar(20)
+  use_whats_app   String[]  @db.VarChar(255)
 }
 
 model posto_signal {
@@ -57,15 +57,16 @@ model basedados {
 }
 
 model ibm_info {
-  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ibm          String? @db.VarChar(255)
-  nomefantasia String? @db.VarChar(255)
-  cnpj         String? @db.VarChar(255)
-  razaosocial  String? @db.VarChar(255)
-  cep          String? @db.VarChar(255)
-  lat          Float?
-  long         Float?
-  endereco     String? @db.VarChar(255)
+  id                                   String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ibm                                  String?             @db.VarChar(255)
+  nomefantasia                         String?             @db.VarChar(255)
+  cnpj                                 String?             @db.VarChar(255)
+  razaosocial                          String?             @db.VarChar(255)
+  cep                                  String?             @db.VarChar(255)
+  lat                                  Float?
+  long                                 Float?
+  endereco                             String?             @db.VarChar(255)
+
 }
 
 model gas_station {
@@ -103,3 +104,5 @@ model dataframe_product {
   dataproduct_dt_registro         String? @db.VarChar(255)
   dataproduct_updated             String? @db.VarChar(255)
 }
+
+
