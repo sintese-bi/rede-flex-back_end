@@ -307,6 +307,20 @@ class VariablesController {
         }
 
     }
+    public async updateGasStationAlertsInfo(req: Request, res: Response) {
+        try {
+
+
+
+
+        } catch (error) {
+            return res.status(500).json({ message: `Erro: ${error}` })
+        }
+
+    }
+
+
+
 }
 
 export default new VariablesController()
