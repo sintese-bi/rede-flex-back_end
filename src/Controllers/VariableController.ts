@@ -296,7 +296,7 @@ class VariablesController {
 
             const result = await prisma.ibm_info.findMany({
                 select: {
-                    lat: true, long: true, nomefantasia: true, ibm: true
+                    lat: true, long: true, nomefantasia: true, ibm: true, endereco: true
                 }
             })
 
@@ -311,11 +311,6 @@ class VariablesController {
                 })
 
             })
-
-
-
-
-
 
             return res.status(200).json({ data: result })
 
@@ -370,9 +365,22 @@ class VariablesController {
     public async CEP(req: Request, res: Response) {
         try {
 
-            const result = await axios.get("viacep.com.br/ws/01001000/json/")
+            const number = await prisma.ibm_info.findMany({
+                select: { cep: true, id: true }
+            })
 
-            return res.status(200).json({ data: result.data })
+
+            number.forEach(async (element) => {
+
+                const value = await axios.get(`http://viacep.com.br/ws/${element.cep}/json/`)
+
+                await prisma.ibm_info.update({
+                    data: { endereco: `${value.data.localidade}-${value.data.bairro}-${value.data.logradouro}` }
+                    , where: { id: element.id }
+                })
+
+            })
+            return res.status(200).json({ data: "Dados inseridos!" })
 
 
         } catch (error) {
@@ -380,8 +388,6 @@ class VariablesController {
         }
 
     }
-
-
 }
 
 export default new VariablesController()
