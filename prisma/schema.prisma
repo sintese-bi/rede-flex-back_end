@@ -66,21 +66,7 @@ model ibm_info {
   lat                                  Float?
   long                                 Float?
   endereco                             String?             @db.VarChar(255)
-  ibm_whats_app                        String[]            @db.VarChar(255)
-  type_absolute_percentual_marginGC    Boolean?
-  type_absolute_percentual_marginAL    Boolean?
-  type_absolute_percentual_marginTotal Boolean?
-  type_absolute_percentual_volumeGC    Boolean?
-  type_absolute_percentual_volumeAL    Boolean?
-  type_absolute_percentual_volumeTotal Boolean?
-  marginGC_value                       Float?
-  marginAL_value                       Float?
-  marginTotal_value                    Float?
-  volumeGC_value                       Float?
-  volumeAL_value                       Float?
-  volumeTota_value                     Float?
-  region_uuid                          String?             @db.Uuid
-  region                               region_gas_station? @relation(fields: [region_uuid], references: [region_uuid])
+
 }
 
 model gas_station {
@@ -119,10 +105,4 @@ model dataframe_product {
   dataproduct_updated             String? @db.VarChar(255)
 }
 
-//Tabela dos índices de região para associar com a tabela ibm_info
-model region_gas_station {
-  region_uuid   String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  region_number String? @db.VarChar(50)
 
-  ibm_info ibm_info[]
-}
