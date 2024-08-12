@@ -286,7 +286,7 @@ class VariablesController {
             const token = process.env.TOKENMONGO;
 
             const info = await axios.get(
-                "http://localhost:3052/v1/map-data",
+                "http://159.65.42.225:3052/v1/map-data",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -311,11 +311,6 @@ class VariablesController {
                 })
 
             })
-
-
-
-
-
 
             return res.status(200).json({ data: result })
 
@@ -393,8 +388,6 @@ class VariablesController {
         }
 
     }
-
-
 }
 
 export default new VariablesController()
