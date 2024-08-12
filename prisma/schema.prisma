@@ -8,36 +8,16 @@ datasource db {
 }
 
 model users {
-  use_uuid              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  use_name              String?         @db.VarChar(100)
-  use_email             String?         @db.VarChar(50)
-  use_password          String?         @db.VarChar(255)
-  use_created_at        DateTime        @default(now()) @db.Timestamp(6)
-  use_updated_at        DateTime        @default(now()) @db.Timestamp(6)
-  use_date_expire       DateTime?
-  use_token             String?         @db.VarChar(255)
-  use_volume_gc         Boolean?
-  use_volume_al         Boolean?
-  use_volume_total      Boolean?
-  use_volume_gc_min     Float?
-  use_volume_al_min     Float?
-  use_volume_total_min  Float?
-  use_level             String?         @db.VarChar(20)
-  use_whats_app         String[]        @db.VarChar(255)
-  use_margin_al         Boolean?
-  use_margin_al_flag    String?         @db.VarChar(20)
-  use_margin_al_min     Float?
-  use_margin_gc         Boolean?
-  use_margin_gc_flag    String?         @db.VarChar(20)
-  use_margin_gc_min     Float?
-  use_margin_total      Boolean?
-  use_margin_total_flag String?         @db.VarChar(20)
-  use_margin_total_min  Float?
-  use_volume_al_flag    String?         @db.VarChar(20)
-  use_volume_gc_flag    String?         @db.VarChar(20)
-  use_volume_total_flag String?         @db.VarChar(20)
-  fuel                  fuel[]
-  set_variables         set_variables[]
+  use_uuid        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  use_name        String?   @db.VarChar(100)
+  use_email       String?   @db.VarChar(50)
+  use_password    String?   @db.VarChar(255)
+  use_created_at  DateTime  @default(now()) @db.Timestamp(6)
+  use_updated_at  DateTime  @default(now()) @db.Timestamp(6)
+  use_date_expire DateTime?
+  use_token       String?   @db.VarChar(255)
+  use_level     String?  @db.VarChar(20)
+  use_whats_app String[] @db.VarChar(255)
 }
 
 model posto_signal {
@@ -74,26 +54,6 @@ model basedados {
   company_profit     Float?    @db.Real
   company_created_at DateTime  @default(now()) @db.Timestamp(6)
   company_updated_at DateTime  @default(now()) @db.Timestamp(6)
-}
-
-model fuel {
-  fuel_uuid             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fuel_regular_gasoline Float?   @db.Real
-  fuel_alcohol          Float?   @db.Real
-  use_uuid              String?  @db.Uuid
-  fuel_created_at       DateTime @default(now()) @db.Timestamp(6)
-  fuel_updated_at       DateTime @default(now()) @db.Timestamp(6)
-  user                  users?   @relation(fields: [use_uuid], references: [use_uuid])
-}
-
-model set_variables {
-  set_uuid             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  set_regular_gasoline Float?   @db.Real
-  set_alcohol          Float?   @db.Real
-  use_uuid             String?  @db.Uuid
-  set_created_at       DateTime @default(now()) @db.Timestamp(6)
-  set_updated_at       DateTime @default(now()) @db.Timestamp(6)
-  user                 users?   @relation(fields: [use_uuid], references: [use_uuid])
 }
 
 model ibm_info {

@@ -3,7 +3,6 @@ import express, { Router } from "express";
 import checkToken from "../src/service/token";
 const variableRouter = Router()
 
-variableRouter.post("/variable-set", checkToken, VariablesController.setVariables)
 variableRouter.get("/databaseall", VariablesController.dataBaseAll)
 variableRouter.post("/databasecompany", VariablesController.dataBaseCompany)
 variableRouter.get("/variable-name", VariablesController.variableName)
