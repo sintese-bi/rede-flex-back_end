@@ -8,37 +8,18 @@ datasource db {
 }
 
 model users {
-  use_uuid        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  use_name        String?   @db.VarChar(100)
-  use_email       String?   @db.VarChar(50)
-  use_password    String?   @db.VarChar(255)
-  use_created_at  DateTime  @default(now()) @db.Timestamp(6)
-  use_updated_at  DateTime  @default(now()) @db.Timestamp(6)
-  use_date_expire DateTime?
-  use_token       String?   @db.VarChar(255)
-  use_level       String?   @db.VarChar(20)
-  use_whats_app   String[]  @db.VarChar(255)
-}
-
-model posto_signal {
-  table_id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  posto_id      String?   @db.Uuid
-  vol_sold      Float?    @db.Real
-  vol_rate      Float?    @db.Real
-  vol_alert     String?   @db.VarChar(255)
-  invoicing     Float?    @db.Real
-  invoice_rate  Float?    @db.Real
-  invoice_alert String?   @db.VarChar(255)
-  created_at    DateTime  @default(now()) @db.Timestamp(6)
-  rd_posto      rd_posto? @relation(fields: [posto_id], references: [posto_uuid])
-
-  @@index([posto_id])
-}
-
-model rd_posto {
-  posto_uuid    String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  posto_name    String?        @db.VarChar(255)
-  posto_signals posto_signal[]
+  use_uuid               String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  use_name               String?                    @db.VarChar(100)
+  use_email              String?                    @db.VarChar(50)
+  use_password           String?                    @db.VarChar(255)
+  use_created_at         DateTime                   @default(now()) @db.Timestamp(6)
+  use_updated_at         DateTime                   @default(now()) @db.Timestamp(6)
+  use_date_expire        DateTime?
+  use_token              String?                    @db.VarChar(255)
+  use_level              String?                    @db.VarChar(20)
+  use_whats_app          String[]                   @db.VarChar(255)
+  gasStationSetVariables gas_station_setvariables[]
+  regionSetVariables     region_setvariables[]
 }
 
 model basedados {
@@ -57,42 +38,43 @@ model basedados {
 }
 
 model ibm_info {
-  id                                   String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ibm                                  String?             @db.VarChar(255)
-  nomefantasia                         String?             @db.VarChar(255)
-  cnpj                                 String?             @db.VarChar(255)
-  razaosocial                          String?             @db.VarChar(255)
-  cep                                  String?             @db.VarChar(255)
-  lat                                  Float?
-  long                                 Float?
-  endereco                             String?             @db.VarChar(255)
-
+  ibm                    String?                    @db.VarChar(255)
+  nomefantasia           String?                    @db.VarChar(255)
+  cnpj                   String?                    @db.VarChar(255)
+  razaosocial            String?                    @db.VarChar(255)
+  cep                    String?                    @db.VarChar(255)
+  lat                    Float?
+  long                   Float?
+  id                     String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  endereco               String?                    @db.VarChar(255)
+  regional               String?                    @db.VarChar(255)
+  gasStationSetVariables gas_station_setvariables[]
 }
 
 model gas_station {
   gas_uuid       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  gas_ibm        String?  @db.VarChar(255)
   gas_fuel_type  String?  @db.VarChar(255)
   gas_value      Float?
-  gas_identifier String?  @db.VarChar(255)
   gas_created_at DateTime @default(now()) @db.Timestamp(6)
   gas_updated_at DateTime @default(now()) @db.Timestamp(6)
+  gas_ibm        String?  @db.VarChar(255)
+  gas_identifier String?  @db.VarChar(255)
 }
 
 model dataframe_fuel {
   datafuel_uuid            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  datafuel_posto           String?  @db.VarChar(255)
-  datafuel_abastecimentos  Float?
-  datafuel_galonagem_litro Float?
-  datafuel_faturamento     Float?
   datafuel_custo           Float?
   datafuel_lucro           Float?
-  datafuel_topCombustivel  String?  @db.VarChar(255)
-  datafuel_dt_aval         DateTime @db.Date
-  datafuel_dayofweek       String?  @db.VarChar(255)
-  datafuel_regional        String?  @db.VarChar(255)
+  datafuel_abastecimentos  Float?
   datafuel_created_at      DateTime @default(now()) @db.Timestamp(6)
+  datafuel_dayofweek       String?  @db.VarChar(255)
+  datafuel_dt_aval         DateTime @db.Date
+  datafuel_faturamento     Float?
+  datafuel_galonagem_litro Float?
+  datafuel_posto           String?  @db.VarChar(255)
+  datafuel_topCombustivel  String?  @db.VarChar(255)
   datafuel_updated_at      DateTime @default(now()) @db.Timestamp(6)
+  datafuel_regional        String?  @db.VarChar(255)
 }
 
 model dataframe_product {
@@ -105,4 +87,60 @@ model dataframe_product {
   dataproduct_updated             String? @db.VarChar(255)
 }
 
+//Tabela para definir variaveis por posto
+model gas_station_setvariables {
+  gas_station_uuid             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gas_station_marginGC         Float?
+  gas_station_marginAL         Float?
+  gas_station_marginTotal      Float?
+  gas_station_volumeGC         Float?
+  gas_station_volumeAL         Float?
+  gas_station_volumeTotal      Float?
+  gas_station_type_marginGC    Boolean?
+  gas_station_type_marginAL    Boolean?
+  gas_station_type_marginTotal Boolean?
+  gas_station_type_volumeGC    Boolean?
+  gas_station_type_volumeAL    Boolean?
+  gas_station_type_volumeTotal Boolean?
+  gas_station_whats_app        String[]  @db.VarChar(255)
+  gas_station_created_at       DateTime  @default(now()) @db.Timestamp(6)
+  gas_station_updated_at       DateTime  @default(now()) @db.Timestamp(6)
+  users                        users?    @relation(fields: [use_uuid], references: [use_uuid])
+  use_uuid                     String?   @db.Uuid
+  ibm_info_id                  String?   @db.Uuid
+  ibm_info                     ibm_info? @relation(fields: [ibm_info_id], references: [id])
+}
 
+//Tabela para definir variaveis por região
+model region_setvariables {
+  region_uuid               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  region_marginGC           Float?
+  region_marginAL           Float?
+  region_marginTotal        Float?
+  region_volumeGC           Float?
+  region_volumeAL           Float?
+  region_volumeTotal        Float?
+  region_type_marginGC      Boolean?
+  region_type_marginAL      Boolean?
+  region_type_marginTotal   Boolean?
+  region_type_volumeGC      Boolean?
+  region_type_volumeAL      Boolean?
+  region_type_volumeTotal   Boolean?
+  region_whats_app          String[] @db.VarChar(255)
+  region_station_created_at DateTime @default(now()) @db.Timestamp(6)
+  region_station_updated_at DateTime @default(now()) @db.Timestamp(6)
+  use_uuid                  String?  @db.Uuid
+  users                     users?   @relation(fields: [use_uuid], references: [use_uuid])
+  regions                   regions? @relation(fields: [regions_uuid], references: [regions_uuid])
+  regions_uuid              String?  @db.Uuid
+}
+
+//Regiões
+model regions {
+  regions_uuid       String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  regions_name       String?               @db.VarChar(50)
+  regions_types      String?               @db.VarChar(50)
+  region_created_at  DateTime              @default(now()) @db.Timestamp(6)
+  region_updated_at  DateTime              @default(now()) @db.Timestamp(6)
+  regionSetVariables region_setvariables[]
+}
