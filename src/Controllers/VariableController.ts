@@ -307,18 +307,142 @@ class VariablesController {
         }
 
     }
+    //API para atualizar as variaveis de um posto 
     public async updateGasStationAlertsInfo(req: Request, res: Response) {
         try {
+            //Corpo da requisição onde value_type é absoluto=0 e percentual=1
+            const { use_uuid, ibm_id, variable_value, variable_name, value_type, telephones }:
+                { use_uuid: string, ibm_id: string, variable_value: number, variable_name: string, value_type: boolean, telephones: string[] } = req.body
+            const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
+            if (!validVariableNames.includes(variable_name)) {
+                return res.status(400).json({ message: "Nome de variável inválido" });
+            }
+            //Buscando se aquele posto para aquele usuário já foi criado no Banco de Dados
+            const result = await prisma.gas_station_setvariables.findFirst({
+                select: { gas_station_uuid: true },
+                where: { use_uuid: use_uuid, ibm_info_id: ibm_id }
+
+            })
+
+            //Se ele existir é atualizada a linha respectiva com a variável nova
+            if (result) {
+                switch (variable_name) {
+                    case "marginGC":
+                        await prisma.gas_station_setvariables.update({
 
 
 
+                            data: { gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type, gas_station_whats_app: telephones },
+                            where: { gas_station_uuid: result.gas_station_uuid }
+                        })
+                        break
+                    case "marginAL":
+                        await prisma.gas_station_setvariables.update({
 
-        } catch (error) {
+
+
+                            data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephones },
+                            where: { gas_station_uuid: result.gas_station_uuid }
+                        })
+                        break
+                    case "marginTotal":
+                        await prisma.gas_station_setvariables.update({
+
+
+
+                            data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephones },
+                            where: { gas_station_uuid: result.gas_station_uuid }
+                        })
+                        break
+                    case "volumeGC":
+                        await prisma.gas_station_setvariables.update({
+
+
+
+                            data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephones },
+                            where: { gas_station_uuid: result.gas_station_uuid }
+                        })
+                        break
+                    case "volumeAL":
+                        await prisma.gas_station_setvariables.update({
+
+
+
+                            data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephones },
+                            where: { gas_station_uuid: result.gas_station_uuid }
+                        })
+                        break
+                    case "volumeTotal":
+                        await prisma.gas_station_setvariables.update({
+
+
+
+                            data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephones },
+                            where: { gas_station_uuid: result.gas_station_uuid }
+                        })
+                        break
+                }
+            }
+            //Se não existir é criado
+            else if (!result) {
+                switch (variable_name) {
+                    case "marginGC":
+                        await prisma.gas_station_setvariables.create({
+
+                            data: { gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+
+                        })
+                        break
+                    case "marginAL":
+                        await prisma.gas_station_setvariables.create({
+
+                            data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+
+                        })
+                        break
+                    case "marginTotal":
+                        await prisma.gas_station_setvariables.create({
+
+                            data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+
+                        })
+                        break
+                    case "volumeGC":
+                        await prisma.gas_station_setvariables.create({
+
+                            data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+
+                        })
+                        break
+                    case "volumeAL":
+                        await prisma.gas_station_setvariables.create({
+
+                            data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+
+                        })
+                        break
+                    case "volumeTotal":
+                        await prisma.gas_station_setvariables.create({
+
+                            data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+
+                        })
+                        break
+                }
+
+
+            }
+
+            return res.status(200).json({ message: "Dados atualizados com sucesso!" })
+
+
+        }
+
+        catch (error) {
             return res.status(500).json({ message: `Erro: ${error}` })
         }
 
     }
-
 
 
 }
