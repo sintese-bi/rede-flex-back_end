@@ -599,129 +599,129 @@ class VariablesController {
 
     }
     //API para atualizar os dados por região
-    public async updateRegionsAlertInfo(req: Request, res: Response) {
-        try {
-            //Corpo da requisição onde value_type é absoluto=0 e percentual=1
-            const { use_uuid, gas_region_id, variable_value, variable_name, value_type, telephones }:
-                { use_uuid: string, gas_region_id: string, variable_value: number, variable_name: string, value_type: boolean, telephones: string[] } = req.body
-            const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
-            if (!validVariableNames.includes(variable_name)) {
-                return res.status(400).json({ message: "Nome de variável inválido" });
-            }
-            //Buscando se aquele posto para aquele usuário já foi criado no Banco de Dados
-            const result = await prisma.region_setvariables.findFirst({
-                select: { region_uuid: true },
-                where: { use_uuid: use_uuid, regions_uuid: gas_region_id }
+    // public async updateRegionsAlertInfo(req: Request, res: Response) {
+    //     try {
+    //         //Corpo da requisição onde value_type é absoluto=0 e percentual=1
+    //         const { use_uuid, gas_region_id, variable_value, variable_name, value_type, telephones }:
+    //             { use_uuid: string, gas_region_id: string, variable_value: number, variable_name: string, value_type: boolean, telephones: string[] } = req.body
+    //         const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
+    //         if (!validVariableNames.includes(variable_name)) {
+    //             return res.status(400).json({ message: "Nome de variável inválido" });
+    //         }
+    //         //Buscando se aquele posto para aquele usuário já foi criado no Banco de Dados
+    //         const result = await prisma.region_setvariables.findFirst({
+    //             select: { region_uuid: true },
+    //             where: { use_uuid: use_uuid, regions_uuid: gas_region_id }
 
-            })
+    //         })
 
-            //Se ele existir é atualizada a linha respectiva com a variável nova
-            if (result) {
-                switch (variable_name) {
-                    case "marginGC":
-                        await prisma.region_setvariables.update({
+    //         //Se ele existir é atualizada a linha respectiva com a variável nova
+    //         if (result) {
+    //             switch (variable_name) {
+    //                 case "marginGC":
+    //                     await prisma.region_setvariables.update({
 
-                            data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephones },
-                            where: { region_uuid: result.region_uuid }
-                        })
-                        break
-                    case "marginAL":
-                        await prisma.region_setvariables.update({
+    //                         data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephones },
+    //                         where: { region_uuid: result.region_uuid }
+    //                     })
+    //                     break
+    //                 case "marginAL":
+    //                     await prisma.region_setvariables.update({
 
-                            data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephones },
-                            where: { region_uuid: result.region_uuid }
-                        })
-                        break
-                    case "marginTotal":
-                        await prisma.region_setvariables.update({
+    //                         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephones },
+    //                         where: { region_uuid: result.region_uuid }
+    //                     })
+    //                     break
+    //                 case "marginTotal":
+    //                     await prisma.region_setvariables.update({
 
-                            data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephones },
-                            where: { region_uuid: result.region_uuid }
-                        })
-                        break
-                    case "volumeGC":
-                        await prisma.region_setvariables.update({
+    //                         data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephones },
+    //                         where: { region_uuid: result.region_uuid }
+    //                     })
+    //                     break
+    //                 case "volumeGC":
+    //                     await prisma.region_setvariables.update({
 
-                            data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephones },
-                            where: { region_uuid: result.region_uuid }
-                        })
-                        break
-                    case "volumeAL":
-                        await prisma.region_setvariables.update({
+    //                         data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephones },
+    //                         where: { region_uuid: result.region_uuid }
+    //                     })
+    //                     break
+    //                 case "volumeAL":
+    //                     await prisma.region_setvariables.update({
 
-                            data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephones },
-                            where: { region_uuid: result.region_uuid }
-                        })
-                        break
-                    case "volumeTotal":
-                        await prisma.region_setvariables.update({
+    //                         data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephones },
+    //                         where: { region_uuid: result.region_uuid }
+    //                     })
+    //                     break
+    //                 case "volumeTotal":
+    //                     await prisma.region_setvariables.update({
 
-                            data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephones },
-                            where: { region_uuid: result.region_uuid }
-                        })
-                        break
-                }
-            }
-            //Se não existir é criado
-            else if (!result) {
-                switch (variable_name) {
-                    case "marginGC":
-                        await prisma.region_setvariables.create({
+    //                         data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephones },
+    //                         where: { region_uuid: result.region_uuid }
+    //                     })
+    //                     break
+    //             }
+    //         }
+    //         //Se não existir é criado
+    //         else if (!result) {
+    //             switch (variable_name) {
+    //                 case "marginGC":
+    //                     await prisma.region_setvariables.create({
 
-                            data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
+    //                         data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
 
-                        })
-                        break
-                    case "marginAL":
-                        await prisma.region_setvariables.create({
+    //                     })
+    //                     break
+    //                 case "marginAL":
+    //                     await prisma.region_setvariables.create({
 
-                            data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
+    //                         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
 
-                        })
-                        break
-                    case "marginTotal":
-                        await prisma.region_setvariables.create({
+    //                     })
+    //                     break
+    //                 case "marginTotal":
+    //                     await prisma.region_setvariables.create({
 
-                            data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
+    //                         data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
 
-                        })
-                        break
-                    case "volumeGC":
-                        await prisma.region_setvariables.create({
+    //                     })
+    //                     break
+    //                 case "volumeGC":
+    //                     await prisma.region_setvariables.create({
 
-                            data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
+    //                         data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
 
-                        })
-                        break
-                    case "volumeAL":
-                        await prisma.region_setvariables.create({
+    //                     })
+    //                     break
+    //                 case "volumeAL":
+    //                     await prisma.region_setvariables.create({
 
-                            data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
+    //                         data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
 
-                        })
-                        break
-                    case "volumeTotal":
-                        await prisma.region_setvariables.create({
+    //                     })
+    //                     break
+    //                 case "volumeTotal":
+    //                     await prisma.region_setvariables.create({
 
-                            data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
+    //                         data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: gas_region_id },
 
-                        })
-                        break
-                }
-
-
-            }
-
-            return res.status(200).json({ message: "Dados atualizados com sucesso!" })
+    //                     })
+    //                     break
+    //             }
 
 
-        }
+    //         }
 
-        catch (error) {
-            return res.status(500).json({ message: `Erro: ${error}` })
-        }
+    //         return res.status(200).json({ message: "Dados atualizados com sucesso!" })
 
-    }
+
+    //     }
+
+    //     catch (error) {
+    //         return res.status(500).json({ message: `Erro: ${error}` })
+    //     }
+
+    // }
 
 }
 

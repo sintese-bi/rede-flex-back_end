@@ -9,7 +9,7 @@ variableRouter.post("/name-table/:filter", checkToken, VariablesController.nameT
 // variableRouter.post("/name-regional-table", checkToken, VariablesController.RegionalNamesTable)
 variableRouter.get("/mock-alerts", checkToken, VariablesController.alertsMock)
 variableRouter.post("/update-alert/:filter", checkToken, VariablesController.updateInfo)
-variableRouter.post("/update-region-alert", checkToken, VariablesController.updateRegionsAlertInfo)
+// variableRouter.post("/update-region-alert", checkToken, VariablesController.updateRegionsAlertInfo)
 variableRouter.get("/cep", VariablesController.CEP)
 // variableRouter.post("/consulting",  VariablesController.consulting)
 // variableRouter.post("/login", UserController.login)
