@@ -309,13 +309,26 @@ class VariablesController {
             const { use_uuid, ibm_id, variable_value, variable_name, value_type, telephones }:
                 { use_uuid: string, ibm_id: string, variable_value: number, variable_name: string, value_type: boolean, telephones: string[] } = req.body
             //value_type falso para absolute e true para percentual
+
             const { filter } = req.params
+            for (let element of telephones) {
+                if (element.length < 11) {
+                    return res.status(400).json({ message: "Número de telefone inválido. Deve ter 11 dígitos!" });
+                }
+            }
+            const telephonesFormated = telephones.map(element => {
+                const indexToRemove = 2
+                const str = element.slice(0, indexToRemove) + element.slice(indexToRemove + 1)
+                const newStr = `+55${str}`
+                return newStr
+            })
             if (filter === "station") {
 
                 const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
                 if (!validVariableNames.includes(variable_name)) {
                     return res.status(400).json({ message: "Nome de variável inválido" });
                 }
+
                 //Buscando se aquele posto para aquele usuário já foi criado no Banco de Dados
                 const result = await prisma.gas_station_setvariables.findFirst({
                     select: { gas_station_uuid: true },
@@ -331,7 +344,7 @@ class VariablesController {
 
 
 
-                                data: { gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type, gas_station_whats_app: telephones },
+                                data: { gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
@@ -340,7 +353,7 @@ class VariablesController {
 
 
 
-                                data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephones },
+                                data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
@@ -349,7 +362,7 @@ class VariablesController {
 
 
 
-                                data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephones },
+                                data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
@@ -358,7 +371,7 @@ class VariablesController {
 
 
 
-                                data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephones },
+                                data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
@@ -367,7 +380,7 @@ class VariablesController {
 
 
 
-                                data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephones },
+                                data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
@@ -376,7 +389,7 @@ class VariablesController {
 
 
 
-                                data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephones },
+                                data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
@@ -388,42 +401,42 @@ class VariablesController {
                         case "marginGC":
                             await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                                data: { gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
 
                             })
                             break
                         case "marginAL":
                             await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                                data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
 
                             })
                             break
                         case "marginTotal":
                             await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                                data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
 
                             })
                             break
                         case "volumeGC":
                             await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                                data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
 
                             })
                             break
                         case "volumeAL":
                             await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                                data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
 
                             })
                             break
                         case "volumeTotal":
                             await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephones, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                                data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
 
                             })
                             break
@@ -434,61 +447,66 @@ class VariablesController {
 
                 return res.status(200).json({ message: "Dados atualizados com sucesso!" })
             } else if (filter === "regional") {
-                const { use_uuid, ibm_id, variable_value, variable_name, value_type, telephones }:
-                    { use_uuid: string, ibm_id: string, variable_value: number, variable_name: string, value_type: boolean, telephones: string[] } = req.body
+
                 const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
                 if (!validVariableNames.includes(variable_name)) {
                     return res.status(400).json({ message: "Nome de variável inválido" });
                 }
+
                 //Buscando se aquele posto para aquele usuário já foi criado no Banco de Dados
                 const result = await prisma.region_setvariables.findFirst({
                     select: { region_uuid: true },
                     where: { use_uuid: use_uuid, regions_uuid: ibm_id }
 
                 })
-
+                const telephonesFormated = telephones.map(element => {
+                    const indexToRemove = 2
+                    const str = element.slice(0, indexToRemove) + element.slice(indexToRemove + 1)
+                    const newStr = `+55${str}`
+                    return newStr
+                })
                 //Se ele existir é atualizada a linha respectiva com a variável nova
                 if (result) {
                     switch (variable_name) {
                         case "marginGC":
                             await prisma.region_setvariables.update({
 
-                                data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephones },
+                                data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephonesFormated },
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
                         case "marginAL":
                             await prisma.region_setvariables.update({
 
-                                data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephones },
+                                data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated },
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
                         case "marginTotal":
                             await prisma.region_setvariables.update({
 
-                                data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephones },
+                                data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephonesFormated },
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
                         case "volumeGC":
                             await prisma.region_setvariables.update({
 
-                                data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephones },
+                                data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephonesFormated },
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
                         case "volumeAL":
                             await prisma.region_setvariables.update({
 
-                                data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephones },
+                                data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephonesFormated },
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
                         case "volumeTotal":
                             await prisma.region_setvariables.update({
 
-                                data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephones },
+                                data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephonesFormated },
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
@@ -500,42 +518,42 @@ class VariablesController {
                         case "marginGC":
                             await prisma.region_setvariables.create({
 
-                                data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
 
                             })
                             break
                         case "marginAL":
                             await prisma.region_setvariables.create({
 
-                                data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
 
                             })
                             break
                         case "marginTotal":
                             await prisma.region_setvariables.create({
 
-                                data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
 
                             })
                             break
                         case "volumeGC":
                             await prisma.region_setvariables.create({
 
-                                data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
 
                             })
                             break
                         case "volumeAL":
                             await prisma.region_setvariables.create({
 
-                                data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
 
                             })
                             break
                         case "volumeTotal":
                             await prisma.region_setvariables.create({
 
-                                data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephones, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
 
                             })
                             break
