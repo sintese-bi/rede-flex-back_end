@@ -24,8 +24,8 @@ const transporter = nodemailer.createTransport({
 });
 type AdjustName = {
     name: string | null;
-    gas_station_region_id: string;
-    gas_station_region_whats_app?: string[];
+    gas_id: string;
+    gas_whats_app?: string[];
 };
 
 class VariablesController {
@@ -204,7 +204,7 @@ class VariablesController {
                     }
                 })
                 const adjustnames: AdjustName[] = result.map(element => {
-                    return { name: element.nomefantasia, gas_station_region_id: element.id }
+                    return { name: element.nomefantasia, gas_id: element.id }
                 })
                 const gas_stations = await prisma.gas_station_setvariables.findMany({
                     select: { gas_station_whats_app: true, ibm_info_id: true },
@@ -214,8 +214,8 @@ class VariablesController {
                 gas_stations.forEach(id => {
 
                     adjustnames.forEach(element => {
-                        if (id.ibm_info_id === element.gas_station_region_id) {
-                            element.gas_station_region_whats_app = id.gas_station_whats_app;
+                        if (id.ibm_info_id === element.gas_id) {
+                            element.gas_whats_app = id.gas_station_whats_app;
 
 
                         }
@@ -228,7 +228,7 @@ class VariablesController {
             } else if (filter === "region") {
                 const result = await prisma.regions.findMany({ select: { regions_uuid: true, regions_name: true, regions_types: true } })
                 const adjustnames: AdjustName[] = result.map(element => {
-                    return { name: element.regions_name, gas_station_region_id: element.regions_uuid }
+                    return { name: element.regions_name, gas_id: element.regions_uuid }
                 })
                 const gas_stations = await prisma.region_setvariables.findMany({
                     select: { region_whats_app: true, regions_uuid: true },
@@ -238,8 +238,8 @@ class VariablesController {
                 gas_stations.forEach(id => {
 
                     adjustnames.forEach(element => {
-                        if (id.regions_uuid === element.gas_station_region_id) {
-                            element.gas_station_region_whats_app = id.region_whats_app;
+                        if (id.regions_uuid === element.gas_id) {
+                            element.gas_whats_app = id.region_whats_app;
 
                         }
 
