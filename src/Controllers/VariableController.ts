@@ -214,7 +214,9 @@ class VariablesController {
                 const gas_stations_nine = gas_stations.map(element => {
 
                     const change = element.gas_station_whats_app.map(numbers => {
-                        return numbers.slice(0, 5).concat("9", numbers.slice(5))
+                        let modified0 = numbers.slice(0, 5).concat("9", numbers.slice(5))
+                        let modified = modified0.slice(3)
+                        return modified
                     })
                     return { gas_station_whats_app: change, ibm_info_id: element.ibm_info_id }
                 })
@@ -244,7 +246,9 @@ class VariablesController {
                 const gas_stations_nine = gas_stations.map(element => {
 
                     const change = element.region_whats_app.map(numbers => {
-                        return numbers.slice(0, 5).concat("9", numbers.slice(5))
+                        let modified0 = numbers.slice(0, 5).concat("9", numbers.slice(5))
+                        let modified = modified0.slice(3)
+                        return modified
                     })
                     return { region_whats_app: change, regions_uuid: element.regions_uuid }
                 })
