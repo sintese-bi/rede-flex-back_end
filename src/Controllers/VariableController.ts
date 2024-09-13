@@ -210,8 +210,15 @@ class VariablesController {
                     select: { gas_station_whats_app: true, ibm_info_id: true },
                     where: { use_uuid: use_uuid }
                 })
+                //Ajustando quantidade de números no telefone que retorna
+                const gas_stations_nine = gas_stations.map(element => {
 
-                gas_stations.forEach(id => {
+                    const change = element.gas_station_whats_app.map(numbers => {
+                        return numbers.slice(0, 5).concat("9", numbers.slice(5))
+                    })
+                    return { gas_station_whats_app: change, ibm_info_id: element.ibm_info_id }
+                })
+                gas_stations_nine.forEach(id => {
 
                     adjustnames.forEach(element => {
                         if (id.ibm_info_id === element.gas_id) {
@@ -234,8 +241,14 @@ class VariablesController {
                     select: { region_whats_app: true, regions_uuid: true },
                     where: { use_uuid: use_uuid }
                 })
+                const gas_stations_nine = gas_stations.map(element => {
 
-                gas_stations.forEach(id => {
+                    const change = element.region_whats_app.map(numbers => {
+                        return numbers.slice(0, 5).concat("9", numbers.slice(5))
+                    })
+                    return { region_whats_app: change, regions_uuid: element.regions_uuid }
+                })
+                gas_stations_nine.forEach(id => {
 
                     adjustnames.forEach(element => {
                         if (id.regions_uuid === element.gas_id) {
