@@ -26,6 +26,7 @@ type AdjustName = {
     name: string | null;
     gas_id: string;
     gas_whats_app?: string[];
+    variables: { marginGC: number | null }
 };
 
 class VariablesController {
@@ -204,10 +205,10 @@ class VariablesController {
                     }
                 })
                 const adjustnames: AdjustName[] = result.map(element => {
-                    return { name: element.nomefantasia, gas_id: element.id }
+                    return { name: element.nomefantasia, gas_id: element.id, variables: { marginGC: 0 } }
                 })
                 const gas_stations = await prisma.gas_station_setvariables.findMany({
-                    select: { gas_station_whats_app: true, ibm_info_id: true },
+                    select: { gas_station_whats_app: true, ibm_info_id: true, gas_station_marginGC: true },
                     where: { use_uuid: use_uuid }
                 })
                 //Ajustando quantidade de números no telefone que retorna
@@ -218,14 +219,15 @@ class VariablesController {
                         let modified = modified0.slice(3)
                         return modified
                     })
-                    return { gas_station_whats_app: change, ibm_info_id: element.ibm_info_id }
+                    return { gas_station_whats_app: change, ibm_info_id: element.ibm_info_id, gas_marginGC: element.gas_station_marginGC }
                 })
+
                 gas_stations_nine.forEach(id => {
 
                     adjustnames.forEach(element => {
                         if (id.ibm_info_id === element.gas_id) {
                             element.gas_whats_app = id.gas_station_whats_app;
-
+                            element.variables.marginGC = id.gas_marginGC
 
                         }
 
@@ -235,12 +237,13 @@ class VariablesController {
 
                 return res.status(200).json({ data: adjustnames })
             } else if (filter === "region") {
+
                 const result = await prisma.regions.findMany({ select: { regions_uuid: true, regions_name: true, regions_types: true } })
                 const adjustnames: AdjustName[] = result.map(element => {
-                    return { name: element.regions_name, gas_id: element.regions_uuid }
+                    return { name: element.regions_name, gas_id: element.regions_uuid, variables: { marginGC: 0 } }
                 })
                 const gas_stations = await prisma.region_setvariables.findMany({
-                    select: { region_whats_app: true, regions_uuid: true },
+                    select: { region_whats_app: true, regions_uuid: true, region_marginGC: true },
                     where: { use_uuid: use_uuid }
                 })
                 const gas_stations_nine = gas_stations.map(element => {
@@ -250,14 +253,14 @@ class VariablesController {
                         let modified = modified0.slice(3)
                         return modified
                     })
-                    return { region_whats_app: change, regions_uuid: element.regions_uuid }
+                    return { region_whats_app: change, regions_uuid: element.regions_uuid, gas_marginGC: element.region_marginGC }
                 })
                 gas_stations_nine.forEach(id => {
 
                     adjustnames.forEach(element => {
                         if (id.regions_uuid === element.gas_id) {
                             element.gas_whats_app = id.region_whats_app;
-
+                            element.variables.marginGC = id.gas_marginGC
                         }
 
                     })
