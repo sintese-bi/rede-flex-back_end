@@ -466,7 +466,7 @@ class VariablesController {
                 }
 
                 return res.status(200).json({ message: "Dados atualizados com sucesso!" })
-            } else if (filter === "regional") {
+            } else if (filter === "region") {
 
                 const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
                 if (!validVariableNames.includes(variable_name)) {
