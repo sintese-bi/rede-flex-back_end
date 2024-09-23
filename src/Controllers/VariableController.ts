@@ -13,13 +13,13 @@ const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
 
-    secure: false,//Usar "false" para ambiente de desenvolvimento
+    secure: true,//Usar "false" para ambiente de desenvolvimento
     auth: {
         user: "",
         pass: process.env.PASSGMAIL,
     },
     tls: {
-        rejectUnauthorized: false, //Usar "false" para ambiente de desenvolvimento
+        rejectUnauthorized: true, //Usar "false" para ambiente de desenvolvimento
     },
 });
 type AdjustName = {
@@ -30,10 +30,6 @@ type AdjustName = {
 };
 
 class VariablesController {
-
-
-
-
 
     // public async consulting(req: Request, res: Response) {
     //     try {
@@ -83,7 +79,6 @@ class VariablesController {
 
 
     // }
-
 
     public async variableName(req: Request, res: Response) {
         try {
@@ -377,42 +372,7 @@ class VariablesController {
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        case "marginTotal":
-                            await prisma.gas_station_setvariables.update({
 
-
-
-                                data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephonesFormated },
-                                where: { gas_station_uuid: result.gas_station_uuid }
-                            })
-                            break
-                        case "volumeGC":
-                            await prisma.gas_station_setvariables.update({
-
-
-
-                                data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephonesFormated },
-                                where: { gas_station_uuid: result.gas_station_uuid }
-                            })
-                            break
-                        case "volumeAL":
-                            await prisma.gas_station_setvariables.update({
-
-
-
-                                data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephonesFormated },
-                                where: { gas_station_uuid: result.gas_station_uuid }
-                            })
-                            break
-                        case "volumeTotal":
-                            await prisma.gas_station_setvariables.update({
-
-
-
-                                data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephonesFormated },
-                                where: { gas_station_uuid: result.gas_station_uuid }
-                            })
-                            break
                     }
                 }
                 //Se não existir é criado
@@ -432,34 +392,7 @@ class VariablesController {
 
                             })
                             break
-                        case "marginTotal":
-                            await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_marginTotal: variable_value, gas_station_type_marginTotal: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
-
-                            })
-                            break
-                        case "volumeGC":
-                            await prisma.gas_station_setvariables.create({
-
-                                data: { gas_station_volumeGC: variable_value, gas_station_type_volumeGC: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
-
-                            })
-                            break
-                        case "volumeAL":
-                            await prisma.gas_station_setvariables.create({
-
-                                data: { gas_station_volumeAL: variable_value, gas_station_type_volumeAL: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
-
-                            })
-                            break
-                        case "volumeTotal":
-                            await prisma.gas_station_setvariables.create({
-
-                                data: { gas_station_volumeTotal: variable_value, gas_station_type_volumeTotal: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
-
-                            })
-                            break
                     }
 
 
@@ -502,34 +435,7 @@ class VariablesController {
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
-                        case "marginTotal":
-                            await prisma.region_setvariables.update({
 
-                                data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephonesFormated },
-                                where: { region_uuid: result.region_uuid }
-                            })
-                            break
-                        case "volumeGC":
-                            await prisma.region_setvariables.update({
-
-                                data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephonesFormated },
-                                where: { region_uuid: result.region_uuid }
-                            })
-                            break
-                        case "volumeAL":
-                            await prisma.region_setvariables.update({
-
-                                data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephonesFormated },
-                                where: { region_uuid: result.region_uuid }
-                            })
-                            break
-                        case "volumeTotal":
-                            await prisma.region_setvariables.update({
-
-                                data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephonesFormated },
-                                where: { region_uuid: result.region_uuid }
-                            })
-                            break
                     }
                 }
                 //Se não existir é criado
@@ -549,34 +455,7 @@ class VariablesController {
 
                             })
                             break
-                        case "marginTotal":
-                            await prisma.region_setvariables.create({
 
-                                data: { region_marginTotal: variable_value, region_type_marginTotal: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
-
-                            })
-                            break
-                        case "volumeGC":
-                            await prisma.region_setvariables.create({
-
-                                data: { region_volumeGC: variable_value, region_type_volumeGC: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
-
-                            })
-                            break
-                        case "volumeAL":
-                            await prisma.region_setvariables.create({
-
-                                data: { region_volumeAL: variable_value, region_type_volumeAL: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
-
-                            })
-                            break
-                        case "volumeTotal":
-                            await prisma.region_setvariables.create({
-
-                                data: { region_volumeTotal: variable_value, region_type_volumeTotal: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
-
-                            })
-                            break
                     }
 
 
