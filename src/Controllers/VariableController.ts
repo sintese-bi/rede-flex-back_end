@@ -307,7 +307,13 @@ class VariablesController {
 
             const lastResult = resultMod.flatMap(element => element)
 
-            return res.status(200).json({ data: lastResult })
+            const sanadoList = lastResult.filter(element => element.condition === "sanado")
+
+            const naoSanadoList = lastResult.filter(element => element.condition === "não sanado")
+
+
+
+            return res.status(200).json({ data: { sanados: sanadoList, quant_sanados: sanadoList.length, nãoSanados: naoSanadoList } })
 
 
         } catch (error) {
