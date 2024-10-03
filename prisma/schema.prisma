@@ -62,6 +62,8 @@ model gas_station_setvariables {
   gas_station_sanado_marginAL                            Boolean?
   gas_station_sanado_marginGC                            Boolean?
   gas_station_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL Boolean?
+  gas_station_margin_MLT                                 Float?
+  gas_station_margin_TMP                                 Float?
   ibm_info                                               ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
