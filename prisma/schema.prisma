@@ -18,6 +18,11 @@ model users {
   use_token              String?                    @db.VarChar(255)
   use_level              String?                    @db.VarChar(20)
   use_whats_app          String[]                   @db.VarChar(255)
+  use_mlt                Float?
+  use_tmc                Float?
+  use_tmf                Float?
+  use_tmp                Float?
+  use_tmvol              Float?
   gasStationSetVariables gas_station_setvariables[]
   regionSetVariables     region_setvariables[]
 }
