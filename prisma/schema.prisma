@@ -18,6 +18,11 @@ model users {
   use_token              String?                    @db.VarChar(255)
   use_level              String?                    @db.VarChar(20)
   use_whats_app          String[]                   @db.VarChar(255)
+  use_mlt                Float?
+  use_tmc                Float?
+  use_tmf                Float?
+  use_tmp                Float?
+  use_tmvol              Float?
   gasStationSetVariables gas_station_setvariables[]
   regionSetVariables     region_setvariables[]
 }
@@ -62,35 +67,37 @@ model gas_station_setvariables {
   gas_station_sanado_marginAL                            Boolean?
   gas_station_sanado_marginGC                            Boolean?
   gas_station_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL Boolean?
+  gas_station_margin_MLT                                 Float?
+  gas_station_margin_TMP                                 Float?
   ibm_info                                               ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
 
 model region_setvariables {
-  region_uuid                                            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  region_marginGC                                        Float?
-  region_marginAL                                        Float?
-  region_type_marginGC                                   Boolean?
-  region_type_marginAL                                   Boolean?
-  region_whats_app                                       String[]  @db.VarChar(255)
-  region_station_created_at                              DateTime  @default(now()) @db.Timestamp(6)
-  region_station_updated_at                              DateTime  @default(now()) @db.Timestamp(6)
-  use_uuid                                               String?   @db.Uuid
-  regions_uuid                                           String?   @db.Uuid
-  verification_msg_sent                                  Boolean?  @default(false)
-  verification_hour_marginAL                             DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  verification_hour_marginGC                             DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  region_margin_ETANOL_HIDRATADO_COMBUSTIVEL             Float?
-  region_type_margin_ETANOL_HIDRATADO_COMBUSTIVEL        Boolean?
-  verification_hour_margin_ETANOL_HIDRATADO_COMBUSTIVEL  DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  gas_station_sanado_hour_ETANOL_HIDRATADO_COMBUSTIVEL   DateTime?
-  gas_station_sanado_hour_marginAL                       DateTime?
-  gas_station_sanado_hour_marginGC                       DateTime?
-  gas_station_sanado_marginAL                            Boolean?
-  gas_station_sanado_marginGC                            Boolean?
-  gas_station_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL Boolean?
-  regions                                                regions?  @relation(fields: [regions_uuid], references: [regions_uuid])
-  users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
+  region_uuid                                           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  region_marginGC                                       Float?
+  region_marginAL                                       Float?
+  region_type_marginGC                                  Boolean?
+  region_type_marginAL                                  Boolean?
+  region_whats_app                                      String[]  @db.VarChar(255)
+  region_station_created_at                             DateTime  @default(now()) @db.Timestamp(6)
+  region_station_updated_at                             DateTime  @default(now()) @db.Timestamp(6)
+  use_uuid                                              String?   @db.Uuid
+  regions_uuid                                          String?   @db.Uuid
+  verification_msg_sent                                 Boolean?  @default(false)
+  verification_hour_marginAL                            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  verification_hour_marginGC                            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_margin_ETANOL_HIDRATADO_COMBUSTIVEL            Float?
+  region_type_margin_ETANOL_HIDRATADO_COMBUSTIVEL       Boolean?
+  verification_hour_margin_ETANOL_HIDRATADO_COMBUSTIVEL DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_sanado_hour_ETANOL_HIDRATADO_COMBUSTIVEL       DateTime?
+  region_sanado_hour_marginAL                           DateTime?
+  region_sanado_hour_marginGC                           DateTime?
+  region_sanado_marginAL                                Boolean?
+  region_sanado_marginGC                                Boolean?
+  region_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL     Boolean?
+  regions                                               regions?  @relation(fields: [regions_uuid], references: [regions_uuid])
+  users                                                 users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
 
 model regions {

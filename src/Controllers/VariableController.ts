@@ -8,6 +8,7 @@ import moment from 'moment-timezone';
 // import cron from "node-cron"
 import jwt from 'jsonwebtoken';
 import { DatasetController } from 'chart.js';
+import extractUserIdFromToken from '../utils/extractUserID';
 const prisma = new PrismaClient();
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -402,7 +403,6 @@ class VariablesController {
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-
                     }
                 }
                 //Se não existir é criado
@@ -422,10 +422,7 @@ class VariablesController {
 
                             })
                             break
-
                     }
-
-
                 }
 
                 return res.status(200).json({ message: "Dados atualizados com sucesso!" })
@@ -488,12 +485,10 @@ class VariablesController {
 
                     }
 
-
                 }
 
                 return res.status(200).json({ message: "Dados atualizados com sucesso!" })
             }
-
 
         }
 
@@ -502,7 +497,44 @@ class VariablesController {
         }
 
     }
+    public async saveModalMargins(req: Request, res: Response) {
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.headers;
+            const id = extractUserIdFromToken(use_token, secret)
+            const { use_mlt, use_tmc, use_tmf, use_tmp, use_tmvol }: { use_mlt: number, use_tmc: number, use_tmf: number, use_tmp: number, use_tmvol: number } = req.body
+            await prisma.users.update({ data: { use_mlt: use_mlt, use_tmc: use_tmc, use_tmf: use_tmf, use_tmvol: use_tmvol, use_tmp: use_tmp }, where: { use_uuid: id } })
+            return res.status(200).json({ message: "Dados atualizados com sucesso!" })
 
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível atualizar seus dados!: ${error}` })
+        }
+    }
+    public async returnModalMargins(req: Request, res: Response) {
+
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.headers;
+
+            const id = extractUserIdFromToken(use_token, secret)
+            const result = await prisma.users.findUnique({ select: { use_tmc: true, use_tmf: true, use_mlt: true, use_tmp: true, use_tmvol: true }, where: { use_uuid: id } })
+
+            return res.status(200).json({ data: result })
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível retornar os dados!: ${error}` })
+        }
+
+
+
+    }
 
 }
 
