@@ -503,7 +503,7 @@ class VariablesController {
             if (!secret) {
                 throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
             }
-            const { use_token }: any = req.headers;
+            const { use_token }: any = req.params;
             const id = extractUserIdFromToken(use_token, secret)
             const { use_mlt, use_tmc, use_tmf, use_tmp, use_tmvol, use_lucro_bruto_operacional_galonagem, use_lucro_bruto_operacional_produto }: { use_mlt: number, use_tmc: number, use_tmf: number, use_tmp: number, use_tmvol: number, use_lucro_bruto_operacional_galonagem: number, use_lucro_bruto_operacional_produto: number } = req.body
             await prisma.users.update({ data: { use_mlt: use_mlt, use_tmc: use_tmc, use_tmf: use_tmf, use_tmvol: use_tmvol, use_tmp: use_tmp, use_lucro_bruto_operacional_galonagem: use_lucro_bruto_operacional_galonagem, use_lucro_bruto_operacional_produto: use_lucro_bruto_operacional_produto }, where: { use_uuid: id } })
@@ -521,7 +521,7 @@ class VariablesController {
             if (!secret) {
                 throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
             }
-            const { use_token }: any = req.headers;
+            const { use_token }: any = req.params;
 
             const id = extractUserIdFromToken(use_token, secret)
             const result = await prisma.users.findUnique({ select: { use_tmc: true, use_tmf: true, use_mlt: true, use_tmp: true, use_tmvol: true, use_lucro_bruto_operacional_galonagem: true, use_lucro_bruto_operacional_produto: true }, where: { use_uuid: id } })
