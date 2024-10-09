@@ -505,8 +505,8 @@ class VariablesController {
             }
             const { use_token }: any = req.params;
             const id = extractUserIdFromToken(use_token, secret)
-            const { use_mlt, use_tmc, use_tmf, use_tmp, use_tmvol, use_lucro_bruto_operacional_galonagem, use_lucro_bruto_operacional_produto }: { use_mlt: number, use_tmc: number, use_tmf: number, use_tmp: number, use_tmvol: number, use_lucro_bruto_operacional_galonagem: number, use_lucro_bruto_operacional_produto: number } = req.body
-            await prisma.users.update({ data: { use_mlt: use_mlt, use_tmc: use_tmc, use_tmf: use_tmf, use_tmvol: use_tmvol, use_tmp: use_tmp, use_lucro_bruto_operacional_galonagem: use_lucro_bruto_operacional_galonagem, use_lucro_bruto_operacional_produto: use_lucro_bruto_operacional_produto }, where: { use_uuid: id } })
+            const { use_mlt, use_tmc, use_tmf, use_tmp, use_tmvol, use_lucro_bruto_operacional }: { use_mlt: number, use_tmc: number, use_tmf: number, use_tmp: number, use_tmvol: number, use_lucro_bruto_operacional: number } = req.body
+            await prisma.users.update({ data: { use_mlt: use_mlt, use_tmc: use_tmc, use_tmf: use_tmf, use_tmvol: use_tmvol, use_tmp: use_tmp, use_lucro_bruto_operacional: use_lucro_bruto_operacional }, where: { use_uuid: id } })
             return res.status(200).json({ message: "Dados atualizados com sucesso!" })
 
 
@@ -524,7 +524,7 @@ class VariablesController {
             const { use_token }: any = req.params;
 
             const id = extractUserIdFromToken(use_token, secret)
-            const result = await prisma.users.findUnique({ select: { use_tmc: true, use_tmf: true, use_mlt: true, use_tmp: true, use_tmvol: true, use_lucro_bruto_operacional_galonagem: true, use_lucro_bruto_operacional_produto: true }, where: { use_uuid: id } })
+            const result = await prisma.users.findUnique({ select: { use_tmc: true, use_tmf: true, use_mlt: true, use_tmp: true, use_tmvol: true, use_lucro_bruto_operacional: true }, where: { use_uuid: id } })
 
             return res.status(200).json({ data: result })
 
@@ -575,7 +575,9 @@ class VariablesController {
                 tmf: element.gas_station_TMF_modal ?? 0,
                 tmc: element.gas_station_TMC_modal ?? 0,
                 tmvol: element.gas_station_TMVOL_modal ?? 0,
+                mlt: element.gas_station_MLT_modal ?? 0,
                 tm_lucro_bruto_operacional: element.gas_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0,
+
             }));
 
             stations.forEach(station => {
@@ -590,6 +592,7 @@ class VariablesController {
                         tmf: 0,
                         tmc: 0,
                         tmvol: 0,
+                        mlt: 0,
                         tm_lucro_bruto_operacional: 0,
                     });
                 }
@@ -603,7 +606,32 @@ class VariablesController {
         }
 
     }
+    public async modalStationsInsert(req: Request, res: Response) {
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.params;
+            const id_token = extractUserIdFromToken(use_token, secret)
+            const { id, tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, mlt }: { id: string, tmp: number, tmf: number, tmc: number, tmvol: number, tm_lucro_bruto_operacional: number, mlt: number } = req.body
+            await prisma.gas_station_setvariables.updateMany({
+                data: {
+                    gas_station_TMF_modal: tmf,
+                    gas_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
+                    gas_station_TMC_modal: tmc,
+                    gas_station_TMP_modal: tmp,
+                    gas_station_TMVOL_modal: tmvol,
+                    gas_station_MLT_modal: mlt,
+                }, where: { use_uuid: id_token, ibm_info_id: id }
+            })
+            return res.status(200).json({ message: "Dados atualizados com sucesso!" })
 
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível atualizar seus dados!: ${error}` })
+        }
+    }
 }
 
 export default new VariablesController()

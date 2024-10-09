@@ -25,6 +25,7 @@ model users {
   use_tmvol                             Float?
   use_lucro_bruto_operacional_galonagem Float?
   use_lucro_bruto_operacional_produto   Float?
+  use_lucro_bruto_operacional           Float?
   gasStationSetVariables                gas_station_setvariables[]
   regionSetVariables                    region_setvariables[]
 }
