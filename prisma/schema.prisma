@@ -71,6 +71,14 @@ model gas_station_setvariables {
   gas_station_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL Boolean?
   gas_station_margin_MLT                                 Float?
   gas_station_margin_TMP                                 Float?
+  gas_station_LUCRO_BRUTO_GALONAGEM_modal                Float?
+  gas_station_LUCRO_BRUTO_OPERACIONAL_modal              Float?
+  gas_station_LUCRO_BRUTO_PRODUTO_modal                  Float?
+  gas_station_MLT_modal                                  Float?
+  gas_station_TMC_modal                                  Float?
+  gas_station_TMF_modal                                  Float?
+  gas_station_TMP_modal                                  Float?
+  gas_station_TMVOL_modal                                Float?
   ibm_info                                               ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
 }

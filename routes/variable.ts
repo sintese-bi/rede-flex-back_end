@@ -10,6 +10,8 @@ variableRouter.post("/name-table/:filter", checkToken, VariablesController.nameT
 variableRouter.post("/alerts-log", checkToken, VariablesController.alertsLog)
 variableRouter.post("/modal-insert-tm/:use_token", checkToken, VariablesController.saveModalMargins)
 variableRouter.get("/modal-return-tm/:use_token", checkToken, VariablesController.returnModalMargins)
+//Modal por postos
+variableRouter.get("/modal-station-return-tm/:use_token", checkToken, VariablesController.modalStationsReturn)
 variableRouter.post("/update-alert/:filter", checkToken, VariablesController.updateInfo)
 // variableRouter.post("/update-region-alert", checkToken, VariablesController.updateRegionsAlertInfo)
 variableRouter.get("/cep", VariablesController.CEP)
