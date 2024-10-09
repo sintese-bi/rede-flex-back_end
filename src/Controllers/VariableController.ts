@@ -532,7 +532,75 @@ class VariablesController {
             return res.status(500).json({ message: `Não foi possível retornar os dados!: ${error}` })
         }
 
+    }
 
+    public async modalStationsReturn(req: Request, res: Response) {
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.params;
+
+            const id = extractUserIdFromToken(use_token, secret)
+            // Obter os dados de result e stations
+            const result = await prisma.gas_station_setvariables.findMany({
+                select: {
+                    gas_station_TMF_modal: true,
+                    gas_station_LUCRO_BRUTO_OPERACIONAL_modal: true,
+                    gas_station_TMC_modal: true,
+                    gas_station_TMP_modal: true,
+                    gas_station_TMVOL_modal: true,
+                    gas_station_MLT_modal: true,
+                    ibm_info: {
+                        select: {
+                            nomefantasia: true,
+                            id: true
+                        }
+                    }
+                },
+                where: { use_uuid: id }
+            });
+
+            const stations = await prisma.ibm_info.findMany({
+                select: {
+                    nomefantasia: true,
+                    id: true
+                }
+            });
+            const finalTM = result.map(element => ({
+                nome_fantasia: element.ibm_info?.nomefantasia ?? "",
+                id: element.ibm_info?.id ?? 0,
+                tmp: element.gas_station_TMP_modal ?? 0,
+                tmf: element.gas_station_TMF_modal ?? 0,
+                tmc: element.gas_station_TMC_modal ?? 0,
+                tmvol: element.gas_station_TMVOL_modal ?? 0,
+                tm_lucro_bruto_operacional: element.gas_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0,
+            }));
+
+            stations.forEach(station => {
+
+                const existsInResult = finalTM.some(item => item.id === station.id);
+
+                if (!existsInResult) {
+                    finalTM.push({
+                        nome_fantasia: station.nomefantasia ?? "",
+                        id: station.id ?? 0,
+                        tmp: 0,
+                        tmf: 0,
+                        tmc: 0,
+                        tmvol: 0,
+                        tm_lucro_bruto_operacional: 0,
+                    });
+                }
+            });
+
+
+            return res.status(200).json({ data: finalTM })
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível retornar os dados!: ${error}` })
+        }
 
     }
 
