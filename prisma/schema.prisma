@@ -26,6 +26,10 @@ model users {
   use_lucro_bruto_operacional_galonagem Float?
   use_lucro_bruto_operacional_produto   Float?
   use_lucro_bruto_operacional           Float?
+  use_ETANOL_COMUM_comb                 Float?
+  use_GASOLINA_COMUM_comb               Float?
+  use_OLEO_DIESEL_B_S10_COMUM_comb      Float?
+  use_OLEO_DIESEL_B_S500_COMUM_comb     Float?
   gasStationSetVariables                gas_station_setvariables[]
   regionSetVariables                    region_setvariables[]
 }
