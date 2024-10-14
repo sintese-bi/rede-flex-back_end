@@ -149,9 +149,19 @@ class VariablesController {
     public async mapPosition(req: Request, res: Response) {
         try {
             const token = process.env.TOKENMONGO;
+            const { use_token }: any = req.params;
+
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const id_token = extractUserIdFromToken(use_token, secret)
+            if (!id_token) {
+                return res.status(400).json({ message: "Token de usuário inválido ou não fornecido." });
+            }
 
             const info = await axios.get(
-                "http://159.65.42.225:3052/v1/map-data",
+                `http://localhost:3052/v1/map-data/${use_token}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
