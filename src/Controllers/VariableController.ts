@@ -149,9 +149,19 @@ class VariablesController {
     public async mapPosition(req: Request, res: Response) {
         try {
             const token = process.env.TOKENMONGO;
+            const { use_token }: any = req.params;
+
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const id_token = extractUserIdFromToken(use_token, secret)
+            if (!id_token) {
+                return res.status(400).json({ message: "Token de usuário inválido ou não fornecido." });
+            }
 
             const info = await axios.get(
-                "http://159.65.42.225:3052/v1/map-data",
+                `http://localhost:3052/v1/map-data/${use_token}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -505,8 +515,19 @@ class VariablesController {
             }
             const { use_token }: any = req.params;
             const id = extractUserIdFromToken(use_token, secret)
-            const { use_mlt, use_tmc, use_tmf, use_tmp, use_tmvol, use_lucro_bruto_operacional }: { use_mlt: number, use_tmc: number, use_tmf: number, use_tmp: number, use_tmvol: number, use_lucro_bruto_operacional: number } = req.body
-            await prisma.users.update({ data: { use_mlt: use_mlt, use_tmc: use_tmc, use_tmf: use_tmf, use_tmvol: use_tmvol, use_tmp: use_tmp, use_lucro_bruto_operacional: use_lucro_bruto_operacional }, where: { use_uuid: id } })
+            const { use_mlt, use_tmc, use_tmf, use_tmp, use_tmvol, use_lucro_bruto_operacional, use_gasolina_comum, use_etanol_comum, use_oleo_diesel_b_s10_comum, use_oleo_diesel_b_s500_comum }: {
+                use_mlt: number, use_tmc: number, use_tmf: number, use_tmp: number, use_tmvol: number,
+                use_lucro_bruto_operacional: number, use_gasolina_comum: number, use_etanol_comum: number, use_oleo_diesel_b_s10_comum: number,
+                use_oleo_diesel_b_s500_comum: number
+            } = req.body
+            await prisma.users.update({
+                data: {
+                    use_mlt: use_mlt, use_tmc: use_tmc, use_tmf: use_tmf, use_tmvol: use_tmvol,
+                    use_tmp: use_tmp, use_lucro_bruto_operacional: use_lucro_bruto_operacional,
+                    use_GASOLINA_COMUM_comb: use_gasolina_comum, use_ETANOL_COMUM_comb: use_etanol_comum, use_OLEO_DIESEL_B_S10_COMUM_comb: use_oleo_diesel_b_s10_comum,
+                    use_OLEO_DIESEL_B_S500_COMUM_comb: use_oleo_diesel_b_s500_comum
+                }, where: { use_uuid: id }
+            })
             return res.status(200).json({ message: "Dados atualizados com sucesso!" })
 
 
@@ -524,7 +545,13 @@ class VariablesController {
             const { use_token }: any = req.params;
 
             const id = extractUserIdFromToken(use_token, secret)
-            const result = await prisma.users.findUnique({ select: { use_tmc: true, use_tmf: true, use_mlt: true, use_tmp: true, use_tmvol: true, use_lucro_bruto_operacional: true }, where: { use_uuid: id } })
+            const result = await prisma.users.findUnique({
+                select: {
+                    use_tmc: true, use_tmf: true,
+                    use_mlt: true, use_tmp: true, use_tmvol: true, use_lucro_bruto_operacional: true, use_OLEO_DIESEL_B_S10_COMUM_comb: true,
+                    use_ETANOL_COMUM_comb: true, use_GASOLINA_COMUM_comb: true, use_OLEO_DIESEL_B_S500_COMUM_comb: true
+                }, where: { use_uuid: id }
+            })
 
             return res.status(200).json({ data: result })
 

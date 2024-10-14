@@ -4,7 +4,7 @@ import checkToken from "../src/service/token";
 const variableRouter = Router()
 variableRouter.get("/variable-name", VariablesController.variableName)
 variableRouter.get("/sum-fuel-literage", VariablesController.SumFuelProduct)
-variableRouter.get("/map-position", checkToken, VariablesController.mapPosition)
+variableRouter.get("/map-position/:use_token", checkToken, VariablesController.mapPosition)
 variableRouter.post("/name-table/:filter", checkToken, VariablesController.nameTable)
 // variableRouter.post("/name-regional-table", checkToken, VariablesController.RegionalNamesTable)
 variableRouter.post("/alerts-log", checkToken, VariablesController.alertsLog)
