@@ -84,6 +84,10 @@ model gas_station_setvariables {
   gas_station_TMF_modal                                  Float?
   gas_station_TMP_modal                                  Float?
   gas_station_TMVOL_modal                                Float?
+  gas_station_ETANOL_COMUM_comb                          Float?
+  gas_station_GASOLINA_COMUM_comb                        Float?
+  gas_station_OLEO_DIESEL_B_S10_COMUM_comb               Float?
+  gas_station_OLEO_DIESEL_B_S500_COMUM_comb              Float?
   ibm_info                                               ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
