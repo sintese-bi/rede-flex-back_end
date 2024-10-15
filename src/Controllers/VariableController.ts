@@ -161,7 +161,7 @@ class VariablesController {
             }
 
             const info = await axios.get(
-                `http://localhost:3052/v1/map-data/${use_token}`,
+                `http://159.65.42.225:3052/v1/map-data/${use_token}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
