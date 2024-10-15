@@ -642,16 +642,33 @@ class VariablesController {
             const { use_token }: any = req.params;
             const id_token = extractUserIdFromToken(use_token, secret)
             const { id, tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, mlt }: { id: string, tmp: number, tmf: number, tmc: number, tmvol: number, tm_lucro_bruto_operacional: number, mlt: number } = req.body
-            await prisma.gas_station_setvariables.updateMany({
-                data: {
-                    gas_station_TMF_modal: tmf,
-                    gas_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
-                    gas_station_TMC_modal: tmc,
-                    gas_station_TMP_modal: tmp,
-                    gas_station_TMVOL_modal: tmvol,
-                    gas_station_MLT_modal: mlt,
-                }, where: { use_uuid: id_token, ibm_info_id: id }
-            })
+            const result = await prisma.gas_station_setvariables.findFirst({ where: { use_uuid: id_token, ibm_info_id: id } })
+            if (!result) {
+                await prisma.gas_station_setvariables.create({
+                    data: {
+                        gas_station_TMF_modal: tmf,
+                        gas_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
+                        gas_station_TMC_modal: tmc,
+                        gas_station_TMP_modal: tmp,
+                        gas_station_TMVOL_modal: tmvol,
+                        gas_station_MLT_modal: mlt,
+                        use_uuid: id_token,
+                        ibm_info_id: id
+                    }
+                })
+            } else {
+                await prisma.gas_station_setvariables.updateMany({
+                    data: {
+                        gas_station_TMF_modal: tmf,
+                        gas_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
+                        gas_station_TMC_modal: tmc,
+                        gas_station_TMP_modal: tmp,
+                        gas_station_TMVOL_modal: tmvol,
+                        gas_station_MLT_modal: mlt,
+                    }, where: { use_uuid: id_token, ibm_info_id: id }
+                })
+            }
+
             return res.status(200).json({ message: "Dados atualizados com sucesso!" })
 
 
@@ -659,6 +676,7 @@ class VariablesController {
             return res.status(500).json({ message: `Não foi possível atualizar seus dados!: ${error}` })
         }
     }
+
 }
 
 export default new VariablesController()
