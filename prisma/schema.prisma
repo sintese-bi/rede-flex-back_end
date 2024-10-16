@@ -115,6 +115,18 @@ model region_setvariables {
   region_sanado_marginAL                                Boolean?
   region_sanado_marginGC                                Boolean?
   region_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL     Boolean?
+  region_station_ETANOL_COMUM_comb                      Float?
+  region_station_GASOLINA_COMUM_comb                    Float?
+  region_station_LUCRO_BRUTO_GALONAGEM_modal            Float?
+  region_station_LUCRO_BRUTO_OPERACIONAL_modal          Float?
+  region_station_LUCRO_BRUTO_PRODUTO_modal              Float?
+  region_station_MLT_modal                              Float?
+  region_station_OLEO_DIESEL_B_S10_COMUM_comb           Float?
+  region_station_OLEO_DIESEL_B_S500_COMUM_comb          Float?
+  region_station_TMC_modal                              Float?
+  region_station_TMF_modal                              Float?
+  region_station_TMP_modal                              Float?
+  region_station_TMVOL_modal                            Float?
   regions                                               regions?  @relation(fields: [regions_uuid], references: [regions_uuid])
   users                                                 users?    @relation(fields: [use_uuid], references: [use_uuid])
 }

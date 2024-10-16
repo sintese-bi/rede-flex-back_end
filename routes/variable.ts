@@ -13,6 +13,9 @@ variableRouter.get("/modal-return-tm/:use_token", checkToken, VariablesControlle
 //Modal por postos
 variableRouter.get("/modal-station-return-tm/:use_token", checkToken, VariablesController.modalStationsReturn)
 variableRouter.post("/modal-station-insert-tm/:use_token", checkToken, VariablesController.modalStationsInsert)
+//Modal por regiões
+variableRouter.post("/modal-regions-insert-tm/:use_token", checkToken, VariablesController.modalRegionsInsert)
+variableRouter.get("/modal-regions-return-tm/:use_token", checkToken, VariablesController.modalRegionsReturn)
 
 variableRouter.post("/update-alert/:filter", checkToken, VariablesController.updateInfo)
 // variableRouter.post("/update-region-alert", checkToken, VariablesController.updateRegionsAlertInfo)
