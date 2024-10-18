@@ -737,17 +737,23 @@ class VariablesController {
             }
             const { use_token }: any = req.params;
             const id_token = extractUserIdFromToken(use_token, secret)
-            const { id, tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, mlt, etanol_comum, gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum }: {
-                id: string, tmp: number, tmf: number, tmc: number,
-                tmvol: number, tm_lucro_bruto_operacional: number, mlt: number, etanol_comum: number,
-                gasolina_comum: number, oleo_diesel_b_s10_comum: number, oleo_diesel_b_s500_comum: number
-            } = req.body
+            const { id, tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, tm_lucro_bruto_operacional_galonagem, tm_lucro_bruto_operacional_produto,
+                mlt, etanol_comum, gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum }: {
+                    id: string, tmp: number, tmf: number, tmc: number,
+                    tmvol: number, tm_lucro_bruto_operacional: number,
+                    tm_lucro_bruto_operacional_galonagem: number,
+                    tm_lucro_bruto_operacional_produto: number,
+                    mlt: number, etanol_comum: number,
+                    gasolina_comum: number, oleo_diesel_b_s10_comum: number, oleo_diesel_b_s500_comum: number
+                } = req.body
             const result = await prisma.region_setvariables.findFirst({ where: { use_uuid: id_token, regions_uuid: id } })
             if (!result) {
                 await prisma.region_setvariables.create({
                     data: {
                         region_station_TMF_modal: tmf,
                         region_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
+                        region_station_LUCRO_BRUTO_GALONAGEM_modal: tm_lucro_bruto_operacional,
+                        region_station_LUCRO_BRUTO_PRODUTO_modal: tm_lucro_bruto_operacional_produto,
                         region_station_TMC_modal: tmc,
                         region_station_TMP_modal: tmp,
                         region_station_TMVOL_modal: tmvol,
@@ -765,6 +771,8 @@ class VariablesController {
                     data: {
                         region_station_TMF_modal: tmf,
                         region_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
+                        region_station_LUCRO_BRUTO_GALONAGEM_modal: tm_lucro_bruto_operacional,
+                        region_station_LUCRO_BRUTO_PRODUTO_modal: tm_lucro_bruto_operacional_produto,
                         region_station_TMC_modal: tmc,
                         region_station_TMP_modal: tmp,
                         region_station_TMVOL_modal: tmvol,
@@ -798,6 +806,8 @@ class VariablesController {
                 select: {
                     region_station_TMF_modal: true,
                     region_station_LUCRO_BRUTO_OPERACIONAL_modal: true,
+                    region_station_LUCRO_BRUTO_GALONAGEM_modal: true,
+                    region_station_LUCRO_BRUTO_PRODUTO_modal: true,
                     region_station_TMC_modal: true,
                     region_station_TMP_modal: true,
                     region_station_TMVOL_modal: true,
@@ -831,6 +841,8 @@ class VariablesController {
                 tmvol: element.region_station_TMVOL_modal ?? 0,
                 mlt: element.region_station_MLT_modal ?? 0,
                 tm_lucro_bruto_operacional: element.region_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0,
+                tm_lucro_bruto_operacional_galonagem: element.region_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0,
+                tm_lucro_bruto_operacional_produto: element.region_station_LUCRO_BRUTO_PRODUTO_modal ?? 0,
                 etanol_comum: element.region_station_ETANOL_COMUM_comb ?? 0,
                 gasolina_comum: element.region_station_GASOLINA_COMUM_comb ?? 0,
                 oleo_diesel_b_s10_comum: element.region_station_OLEO_DIESEL_B_S10_COMUM_comb ?? 0,
@@ -852,6 +864,8 @@ class VariablesController {
                         tmvol: 0,
                         mlt: 0,
                         tm_lucro_bruto_operacional: 0,
+                        tm_lucro_bruto_operacional_galonagem: 0,
+                        tm_lucro_bruto_operacional_produto: 0,
                         etanol_comum: 0,
                         gasolina_comum: 0,
                         oleo_diesel_b_s10_comum: 0,
