@@ -525,11 +525,11 @@ class VariablesController {
             await prisma.users.update({
                 data: {
                     use_mlt: use_mlt, use_tmc: use_tmc, use_tmf: use_tmf, use_tmvol: use_tmvol,
-                    use_tmp: use_tmp, use_lucro_bruto_operacional: use_lucro_bruto_operacional,
+                    use_tmp: use_tmp, use_lucro_bruto_operacional: Math.round((use_lucro_bruto_operacional / 100) * 100) / 100,
                     use_GASOLINA_COMUM_comb: use_gasolina_comum, use_ETANOL_COMUM_comb: use_etanol_comum, use_OLEO_DIESEL_B_S10_COMUM_comb: use_oleo_diesel_b_s10_comum,
                     use_OLEO_DIESEL_B_S500_COMUM_comb: use_oleo_diesel_b_s500_comum,
-                    use_lucro_bruto_operacional_galonagem: use_lucro_bruto_operacional_galonagem,
-                    use_lucro_bruto_operacional_produto: use_lucro_bruto_operacional_produto
+                    use_lucro_bruto_operacional_galonagem: Math.round((use_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
+                    use_lucro_bruto_operacional_produto: Math.round((use_lucro_bruto_operacional_produto / 100) * 100) / 100
                 }, where: { use_uuid: id }
             })
             return res.status(200).json({ message: "Dados atualizados com sucesso!" })
@@ -687,9 +687,9 @@ class VariablesController {
                 await prisma.gas_station_setvariables.create({
                     data: {
                         gas_station_TMF_modal: tmf,
-                        gas_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
-                        gas_station_LUCRO_BRUTO_PRODUTO_modal: tm_lucro_bruto_operacional_produto,
-                        gas_station_LUCRO_BRUTO_GALONAGEM_modal: tm_lucro_bruto_operacional_galonagem,
+                        gas_station_LUCRO_BRUTO_OPERACIONAL_modal: Math.round((tm_lucro_bruto_operacional / 100) * 100) / 100,
+                        gas_station_LUCRO_BRUTO_PRODUTO_modal: Math.round((tm_lucro_bruto_operacional_produto / 100) * 100) / 100,
+                        gas_station_LUCRO_BRUTO_GALONAGEM_modal: Math.round((tm_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
                         gas_station_TMC_modal: tmc,
                         gas_station_TMP_modal: tmp,
                         gas_station_TMVOL_modal: tmvol,
@@ -706,9 +706,9 @@ class VariablesController {
                 await prisma.gas_station_setvariables.updateMany({
                     data: {
                         gas_station_TMF_modal: tmf,
-                        gas_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
-                        gas_station_LUCRO_BRUTO_PRODUTO_modal: tm_lucro_bruto_operacional_produto,
-                        gas_station_LUCRO_BRUTO_GALONAGEM_modal: tm_lucro_bruto_operacional_galonagem,
+                        gas_station_LUCRO_BRUTO_OPERACIONAL_modal: Math.round((tm_lucro_bruto_operacional / 100) * 100) / 100,
+                        gas_station_LUCRO_BRUTO_PRODUTO_modal: Math.round((tm_lucro_bruto_operacional_produto / 100) * 100) / 100,
+                        gas_station_LUCRO_BRUTO_GALONAGEM_modal: Math.round((tm_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
                         gas_station_TMC_modal: tmc,
                         gas_station_TMP_modal: tmp,
                         gas_station_TMVOL_modal: tmvol,
@@ -751,9 +751,9 @@ class VariablesController {
                 await prisma.region_setvariables.create({
                     data: {
                         region_station_TMF_modal: tmf,
-                        region_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
-                        region_station_LUCRO_BRUTO_GALONAGEM_modal: tm_lucro_bruto_operacional,
-                        region_station_LUCRO_BRUTO_PRODUTO_modal: tm_lucro_bruto_operacional_produto,
+                        region_station_LUCRO_BRUTO_OPERACIONAL_modal: Math.round((tm_lucro_bruto_operacional / 100) * 100) / 100,
+                        region_station_LUCRO_BRUTO_GALONAGEM_modal: Math.round((tm_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
+                        region_station_LUCRO_BRUTO_PRODUTO_modal: Math.round((tm_lucro_bruto_operacional_produto / 100) * 100) / 100,
                         region_station_TMC_modal: tmc,
                         region_station_TMP_modal: tmp,
                         region_station_TMVOL_modal: tmvol,
@@ -770,9 +770,9 @@ class VariablesController {
                 await prisma.region_setvariables.updateMany({
                     data: {
                         region_station_TMF_modal: tmf,
-                        region_station_LUCRO_BRUTO_OPERACIONAL_modal: tm_lucro_bruto_operacional,
-                        region_station_LUCRO_BRUTO_GALONAGEM_modal: tm_lucro_bruto_operacional,
-                        region_station_LUCRO_BRUTO_PRODUTO_modal: tm_lucro_bruto_operacional_produto,
+                        region_station_LUCRO_BRUTO_OPERACIONAL_modal: Math.round((tm_lucro_bruto_operacional / 100) * 100) / 100,
+                        region_station_LUCRO_BRUTO_GALONAGEM_modal: Math.round((tm_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
+                        region_station_LUCRO_BRUTO_PRODUTO_modal: Math.round((tm_lucro_bruto_operacional_produto / 100) * 100) / 100,
                         region_station_TMC_modal: tmc,
                         region_station_TMP_modal: tmp,
                         region_station_TMVOL_modal: tmvol,
