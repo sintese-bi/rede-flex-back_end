@@ -48,6 +48,7 @@ model ibm_info {
   ibm_margin_AL                           Float[]
   ibm_margin_GC                           Float[]
   ibm_margin_ETANOL_HIDRATADO_COMBUSTIVEL Float[]
+  ibm_margin_ETANOL_COMUM                 Float[]
   gasStationSetVariables                  gas_station_setvariables[]
 }
 
@@ -88,6 +89,16 @@ model gas_station_setvariables {
   gas_station_GASOLINA_COMUM_comb                        Float?
   gas_station_OLEO_DIESEL_B_S10_COMUM_comb               Float?
   gas_station_OLEO_DIESEL_B_S500_COMUM_comb              Float?
+  gas_station_margin_ETANOL_COMUM                        Float?
+  gas_station_sanado_hour_margin_ETANOL_COMUM            DateTime?
+  gas_station_sanado_margin_ETANOL_COMUM                 Boolean?
+  gas_station_type_margin_ETANOL_COMUM                   Boolean?
+  verification_hour_margin_ETANOLCOMUM                   DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_margin_GASOLINE_GROUP2                     Float?
+  gas_station_sanado_hour_margin_GASOLINE_GROUP2         DateTime?
+  gas_station_sanado_margin_GASOLINE_GROUP2              Boolean?
+  gas_station_type_margin_GASOLINE_GROUP2                Boolean?
+  verification_hour_margin_GASOLINE_GROUP2               DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
   ibm_info                                               ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
@@ -127,6 +138,16 @@ model region_setvariables {
   region_station_TMF_modal                              Float?
   region_station_TMP_modal                              Float?
   region_station_TMVOL_modal                            Float?
+  region_margin_ETANOL_COMUM                            Float?
+  region_sanado_hour_ETANOL_COMUM                       DateTime?
+  region_sanado_margin_ETANOL_COMUM                     Boolean?
+  region_type_margin_ETANOL_COMUM                       Boolean?
+  verification_hour_margin_ETANOL_COMUM                 DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_margin_GASOLINE_GROUP2                         Float?
+  region_sanado_hour_margin_GASOLINE_GROUP2             DateTime?
+  region_sanado_margin_GASOLINE_GROUP2                  Boolean?
+  region_type_margin_GASOLINE_GROUP2                    Boolean?
+  verification_hour_margin_GASOLINE_GROUP2              DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
   regions                                               regions?  @relation(fields: [regions_uuid], references: [regions_uuid])
   users                                                 users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
@@ -140,5 +161,17 @@ model regions {
   regions_margin_AL                           Float[]
   regions_margin_GC                           Float[]
   regions_margin_ETANOL_HIDRATADO_COMBUSTIVEL Float[]
+  regions_margin_ETANOL_COMUM                 Float[]
   regionSetVariables                          region_setvariables[]
+}
+
+model big_numbers_values {
+  bignumbers_uuid          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bignumbers_sumliterage   Float?
+  bignumbers_invoicing     Float?
+  bignumbers_Supplies      Float?
+  bignumbers_fuelSales     Float?
+  bignumbers_fuelProfit    Float?
+  bignumbers_productSales  Float?
+  bignumbers_productProfit Float?
 }
