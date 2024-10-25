@@ -561,9 +561,9 @@ class VariablesController {
 
             const info = {
                 use_tmc: result?.use_tmc, use_tmf: result?.use_tmf, use_mlt: result?.use_mlt, use_tmp: result?.use_tmp,
-                use_tmvol: result?.use_tmvol, use_lucro_bruto_operacional: ((result?.use_lucro_bruto_operacional) || 0) * 100,
-                use_lucro_bruto_operacional_produto: (result?.use_lucro_bruto_operacional_produto || 0) * 100,
-                use_lucro_bruto_operacional_galonagem: (result?.use_lucro_bruto_operacional_galonagem || 0) * 100,
+                use_tmvol: result?.use_tmvol, use_lucro_bruto_operacional: Math.round(((result?.use_lucro_bruto_operacional || 0) * 100) * 100) / 100,
+                use_lucro_bruto_operacional_produto: Math.round(((result?.use_lucro_bruto_operacional_produto || 0) * 100) * 100) / 100,
+                use_lucro_bruto_operacional_galonagem: Math.round(((result?.use_lucro_bruto_operacional_galonagem || 0) * 100) * 100) / 100,
                 use_gasolina_comum_comb: result?.use_GASOLINA_COMUM_comb, use_etanol_comum_comb: result?.use_ETANOL_COMUM_comb,
                 use_oleo_diesel_b_s10_comum_comb: result?.use_OLEO_DIESEL_B_S10_COMUM_comb,
                 use_oleo_diesel_b_s500_comum_comb: result?.use_OLEO_DIESEL_B_S500_COMUM_comb
@@ -626,9 +626,9 @@ class VariablesController {
                 tmc: element.gas_station_TMC_modal ?? 0,
                 tmvol: element.gas_station_TMVOL_modal ?? 0,
                 mlt: element.gas_station_MLT_modal ?? 0,
-                tm_lucro_bruto_operacional: (element.gas_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100,
-                tm_lucro_bruto_operacional_produto: (element.gas_station_LUCRO_BRUTO_PRODUTO_modal ?? 0) * 100,
-                tm_lucro_bruto_operacional_galonagem: (element.gas_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0) * 100,
+                tm_lucro_bruto_operacional: Math.round((element.gas_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100 * 100) / 100 ,
+                tm_lucro_bruto_operacional_produto: Math.round((element.gas_station_LUCRO_BRUTO_PRODUTO_modal ?? 0) * 100 * 100) / 100,
+                tm_lucro_bruto_operacional_galonagem: Math.round((element.gas_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0) * 100 * 100) / 100,
                 etanol_comum: element.gas_station_ETANOL_COMUM_comb ?? 0,
                 gasolina_comum: element.gas_station_GASOLINA_COMUM_comb ?? 0,
                 oleo_diesel_b_s10_comum: element.gas_station_OLEO_DIESEL_B_S10_COMUM_comb ?? 0,
