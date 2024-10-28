@@ -166,12 +166,13 @@ model regions {
 }
 
 model big_numbers_values {
-  bignumbers_uuid          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  bignumbers_sumliterage   Float?
-  bignumbers_invoicing     Float?
-  bignumbers_Supplies      Float?
-  bignumbers_fuelSales     Float?
-  bignumbers_fuelProfit    Float?
-  bignumbers_productSales  Float?
-  bignumbers_productProfit Float?
+  bignumbers_uuid               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bignumbers_sumliterage        Float?
+  bignumbers_invoicing          Float?
+  bignumbers_Supplies           Float?
+  bignumbers_fuelSales          Float?
+  bignumbers_fuelProfit         Float?
+  bignumbers_productSales       Float?
+  bignumbers_productProfit      Float?
+  bignumbers_dailyProductProfit Float?
 }
