@@ -185,9 +185,36 @@ class VariablesController {
 
                 })
 
-            })
 
-            return res.status(200).json({ data: result })
+            })
+            const dataStructured = result.map(element => {
+                if (!("averageComparison" in element)) {
+                    return {
+                        ...element,
+                        "M/LT": 0,
+                        "TMC": 0,
+                        "TM VOL": 0,
+                        "TMP": 0,
+                        "TMF": 0,
+                        "M/LT_Definido": 0,
+                        "TMC_Definido": 0,
+                        "TM VOL_Definido": 0,
+                        "TMP_Definido": 0,
+                        "TMF_Definido": 0,
+                        "LBO": 0,
+                        "LBOProduto": 0,
+                        "LBOGalonagem": 0,
+                        "LBO_Definido": 0,
+                        "LBO_Produto_Definido": 0,
+                        "LBO_Galonagem_Definido": 0,
+                        "averageComparison": 0
+                    };
+                }
+                return element;
+            });
+
+
+            return res.status(200).json({ data: dataStructured })
 
 
         } catch (error) {
@@ -404,15 +431,15 @@ class VariablesController {
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        case "marginAL":
-                            await prisma.gas_station_setvariables.update({
+                        // case "marginAL":
+                        //     await prisma.gas_station_setvariables.update({
 
 
 
-                                data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated },
-                                where: { gas_station_uuid: result.gas_station_uuid }
-                            })
-                            break
+                        //         data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated },
+                        //         where: { gas_station_uuid: result.gas_station_uuid }
+                        //     })
+                        //     break
                     }
                 }
                 //Se não existir é criado
@@ -425,13 +452,13 @@ class VariablesController {
 
                             })
                             break
-                        case "marginAL":
-                            await prisma.gas_station_setvariables.create({
+                        // case "marginAL":
+                        //     await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                        //         data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
 
-                            })
-                            break
+                        //     })
+                        //     break
                     }
                 }
 
@@ -465,13 +492,13 @@ class VariablesController {
                                 where: { region_uuid: result.region_uuid }
                             })
                             break
-                        case "marginAL":
-                            await prisma.region_setvariables.update({
+                        // case "marginAL":
+                        //     await prisma.region_setvariables.update({
 
-                                data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated },
-                                where: { region_uuid: result.region_uuid }
-                            })
-                            break
+                        //         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated },
+                        //         where: { region_uuid: result.region_uuid }
+                        //     })
+                        //     break
 
                     }
                 }
@@ -485,13 +512,13 @@ class VariablesController {
 
                             })
                             break
-                        case "marginAL":
-                            await prisma.region_setvariables.create({
+                        // case "marginAL":
+                        //     await prisma.region_setvariables.create({
 
-                                data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
+                        //         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
 
-                            })
-                            break
+                        //     })
+                        //     break
 
                     }
 
@@ -626,7 +653,7 @@ class VariablesController {
                 tmc: element.gas_station_TMC_modal ?? 0,
                 tmvol: element.gas_station_TMVOL_modal ?? 0,
                 mlt: element.gas_station_MLT_modal ?? 0,
-                tm_lucro_bruto_operacional: Math.round((element.gas_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100 * 100) / 100 ,
+                tm_lucro_bruto_operacional: Math.round((element.gas_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100 * 100) / 100,
                 tm_lucro_bruto_operacional_produto: Math.round((element.gas_station_LUCRO_BRUTO_PRODUTO_modal ?? 0) * 100 * 100) / 100,
                 tm_lucro_bruto_operacional_galonagem: Math.round((element.gas_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0) * 100 * 100) / 100,
                 etanol_comum: element.gas_station_ETANOL_COMUM_comb ?? 0,
