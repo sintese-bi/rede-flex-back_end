@@ -49,6 +49,7 @@ model ibm_info {
   ibm_margin_ETANOL_HIDRATADO_COMBUSTIVEL Float[]
   ibm_margin_GASOLINA_PODIUM              Float[]
   ibm_margin_GASOLINA_PREMIUM             Float[]
+  ibm_margin_DIESEL_GROUP                 Float[]
   gasStationSetVariables                  gas_station_setvariables[]
 }
 
@@ -163,6 +164,7 @@ model regions {
   regions_margin_ETANOL_HIDRATADO_COMBUSTIVEL Float[]
   regions_margin_GASOLINA_PODIUM              Float[]
   regions_margin_GASOLINA_PREMIUM             Float[]
+  regions_margin_DIESEL_GROUP                 Float[]
   regionSetVariables                          region_setvariables[]
 }
 
