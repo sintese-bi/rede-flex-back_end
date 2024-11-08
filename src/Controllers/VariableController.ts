@@ -909,6 +909,270 @@ class VariablesController {
         }
 
     }
+    public async modalStationsGeneralInsert(req: Request, res: Response) {
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.params;
+            const id_token = extractUserIdFromToken(use_token, secret)
+            const { tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, tm_lucro_bruto_operacional_galonagem, tm_lucro_bruto_operacional_produto, mlt, etanol_comum, gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum }: {
+                id: string, tmp: number, tmf: number, tmc: number,
+                tmvol: number, tm_lucro_bruto_operacional: number, tm_lucro_bruto_operacional_galonagem: number,
+                tm_lucro_bruto_operacional_produto: number, mlt: number, etanol_comum: number,
+                gasolina_comum: number, oleo_diesel_b_s10_comum: number, oleo_diesel_b_s500_comum: number
+            } = req.body
+
+
+            await prisma.gas_station_setvariables.updateMany({
+                data: {
+                    gas_station_TMF_modal: tmf,
+                    gas_station_LUCRO_BRUTO_OPERACIONAL_modal: Math.round((tm_lucro_bruto_operacional / 100) * 100) / 100,
+                    gas_station_LUCRO_BRUTO_PRODUTO_modal: Math.round((tm_lucro_bruto_operacional_produto / 100) * 100) / 100,
+                    gas_station_LUCRO_BRUTO_GALONAGEM_modal: Math.round((tm_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
+                    gas_station_TMC_modal: tmc,
+                    gas_station_TMP_modal: tmp,
+                    gas_station_TMVOL_modal: tmvol,
+                    gas_station_MLT_modal: mlt,
+                    gas_station_ETANOL_COMUM_comb: etanol_comum,
+                    gas_station_GASOLINA_COMUM_comb: gasolina_comum,
+                    gas_station_OLEO_DIESEL_B_S10_COMUM_comb: oleo_diesel_b_s10_comum,
+                    gas_station_OLEO_DIESEL_B_S500_COMUM_comb: oleo_diesel_b_s500_comum,
+                }, where: { use_uuid: id_token }
+
+            })
+            return res.status(200).json({ message: "Dados atualizados com sucesso!" })
+
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível atualizar seus dados!: ${error}` })
+        }
+    }
+    public async modalStationsGeneralReturn(req: Request, res: Response) {
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.params;
+
+            const id = extractUserIdFromToken(use_token, secret)
+            // Obter os dados de result e stations
+            const result = await prisma.gas_station_setvariables.findMany({
+                select: {
+                    gas_station_TMF_modal: true,
+                    gas_station_LUCRO_BRUTO_OPERACIONAL_modal: true,
+                    gas_station_LUCRO_BRUTO_GALONAGEM_modal: true,
+                    gas_station_LUCRO_BRUTO_PRODUTO_modal: true,
+                    gas_station_TMC_modal: true,
+                    gas_station_TMP_modal: true,
+                    gas_station_TMVOL_modal: true,
+                    gas_station_MLT_modal: true,
+                    gas_station_ETANOL_COMUM_comb: true,
+                    gas_station_GASOLINA_COMUM_comb: true,
+                    gas_station_OLEO_DIESEL_B_S10_COMUM_comb: true,
+                    gas_station_OLEO_DIESEL_B_S500_COMUM_comb: true,
+                    ibm_info: {
+                        select: {
+                            nomefantasia: true,
+                            id: true
+                        }
+                    }
+                },
+                where: { use_uuid: id }
+            });
+
+            const stations = await prisma.ibm_info.findMany({
+                select: {
+                    nomefantasia: true,
+                    id: true
+                }
+            });
+            const finalTM = result.map(element => ({
+                nome_fantasia: element.ibm_info?.nomefantasia ?? "",
+                id: element.ibm_info?.id ?? 0,
+                tmp: element.gas_station_TMP_modal ?? 0,
+                tmf: element.gas_station_TMF_modal ?? 0,
+                tmc: element.gas_station_TMC_modal ?? 0,
+                tmvol: element.gas_station_TMVOL_modal ?? 0,
+                mlt: element.gas_station_MLT_modal ?? 0,
+                tm_lucro_bruto_operacional: Math.round((element.gas_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100 * 100) / 100,
+                tm_lucro_bruto_operacional_produto: Math.round((element.gas_station_LUCRO_BRUTO_PRODUTO_modal ?? 0) * 100 * 100) / 100,
+                tm_lucro_bruto_operacional_galonagem: Math.round((element.gas_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0) * 100 * 100) / 100,
+                etanol_comum: element.gas_station_ETANOL_COMUM_comb ?? 0,
+                gasolina_comum: element.gas_station_GASOLINA_COMUM_comb ?? 0,
+                oleo_diesel_b_s10_comum: element.gas_station_OLEO_DIESEL_B_S10_COMUM_comb ?? 0,
+                oleo_diesel_b_s500_comum: element.gas_station_OLEO_DIESEL_B_S500_COMUM_comb ?? 0
+
+            }));
+
+            stations.forEach(station => {
+
+                const existsInResult = finalTM.some(item => item.id === station.id);
+
+                if (!existsInResult) {
+                    finalTM.push({
+                        nome_fantasia: station.nomefantasia ?? "",
+                        id: station.id ?? 0,
+                        tmp: 0,
+                        tmf: 0,
+                        tmc: 0,
+                        tmvol: 0,
+                        mlt: 0,
+                        tm_lucro_bruto_operacional: 0,
+                        tm_lucro_bruto_operacional_galonagem: 0,
+                        tm_lucro_bruto_operacional_produto: 0,
+                        etanol_comum: 0,
+                        gasolina_comum: 0,
+                        oleo_diesel_b_s10_comum: 0,
+                        oleo_diesel_b_s500_comum: 0,
+                    });
+                }
+            });
+
+
+            return res.status(200).json({ data: finalTM })
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível retornar os dados!: ${error}` })
+        }
+
+    }
+    public async modalRegionsGeneralInsert(req: Request, res: Response) {
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.params;
+            const id_token = extractUserIdFromToken(use_token, secret)
+            const { tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, tm_lucro_bruto_operacional_galonagem, tm_lucro_bruto_operacional_produto,
+                mlt, etanol_comum, gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum }: {
+                    id: string, tmp: number, tmf: number, tmc: number,
+                    tmvol: number, tm_lucro_bruto_operacional: number,
+                    tm_lucro_bruto_operacional_galonagem: number,
+                    tm_lucro_bruto_operacional_produto: number,
+                    mlt: number, etanol_comum: number,
+                    gasolina_comum: number, oleo_diesel_b_s10_comum: number, oleo_diesel_b_s500_comum: number
+                } = req.body
+
+
+            await prisma.region_setvariables.updateMany({
+                data: {
+                    region_station_TMF_modal: tmf,
+                    region_station_LUCRO_BRUTO_OPERACIONAL_modal: Math.round((tm_lucro_bruto_operacional / 100) * 100) / 100,
+                    region_station_LUCRO_BRUTO_GALONAGEM_modal: Math.round((tm_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
+                    region_station_LUCRO_BRUTO_PRODUTO_modal: Math.round((tm_lucro_bruto_operacional_produto / 100) * 100) / 100,
+                    region_station_TMC_modal: tmc,
+                    region_station_TMP_modal: tmp,
+                    region_station_TMVOL_modal: tmvol,
+                    region_station_MLT_modal: mlt,
+                    region_station_ETANOL_COMUM_comb: etanol_comum,
+                    region_station_GASOLINA_COMUM_comb: gasolina_comum,
+                    region_station_OLEO_DIESEL_B_S10_COMUM_comb: oleo_diesel_b_s10_comum,
+                    region_station_OLEO_DIESEL_B_S500_COMUM_comb: oleo_diesel_b_s500_comum,
+                }, where: { use_uuid: id_token }
+            })
+
+
+            return res.status(200).json({ message: "Dados atualizados com sucesso!" })
+
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível atualizar seus dados!: ${error}` })
+        }
+    }
+    public async modalRegionsGeneralReturn(req: Request, res: Response) {
+        try {
+            const secret = process.env.SECRET;
+            if (!secret) {
+                throw new Error('Chave secreta não definida. Verifique a variável de ambiente SECRET.');
+            }
+            const { use_token }: any = req.params;
+
+            const id = extractUserIdFromToken(use_token, secret)
+            // Obter os dados de result e stations
+            const result = await prisma.region_setvariables.findMany({
+                select: {
+                    region_station_TMF_modal: true,
+                    region_station_LUCRO_BRUTO_OPERACIONAL_modal: true,
+                    region_station_LUCRO_BRUTO_GALONAGEM_modal: true,
+                    region_station_LUCRO_BRUTO_PRODUTO_modal: true,
+                    region_station_TMC_modal: true,
+                    region_station_TMP_modal: true,
+                    region_station_TMVOL_modal: true,
+                    region_station_MLT_modal: true,
+                    region_station_ETANOL_COMUM_comb: true,
+                    region_station_GASOLINA_COMUM_comb: true,
+                    region_station_OLEO_DIESEL_B_S10_COMUM_comb: true,
+                    region_station_OLEO_DIESEL_B_S500_COMUM_comb: true,
+                    regions: {
+                        select: {
+                            regions_name: true,
+                            regions_uuid: true
+                        }
+                    }
+                },
+                where: { use_uuid: id }
+            });
+
+            const regions = await prisma.regions.findMany({
+                select: {
+                    regions_name: true,
+                    regions_uuid: true
+                }
+            });
+            const finalTM = result.map(element => ({
+                region_name: element.regions?.regions_name ?? "",
+                id: element.regions?.regions_uuid ?? 0,
+                tmp: element.region_station_TMP_modal ?? 0,
+                tmf: element.region_station_TMF_modal ?? 0,
+                tmc: element.region_station_TMC_modal ?? 0,
+                tmvol: element.region_station_TMVOL_modal ?? 0,
+                mlt: element.region_station_MLT_modal ?? 0,
+                tm_lucro_bruto_operacional: (element.region_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100,
+                tm_lucro_bruto_operacional_galonagem: (element.region_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0) * 100,
+                tm_lucro_bruto_operacional_produto: (element.region_station_LUCRO_BRUTO_PRODUTO_modal ?? 0) * 100,
+                etanol_comum: element.region_station_ETANOL_COMUM_comb ?? 0,
+                gasolina_comum: element.region_station_GASOLINA_COMUM_comb ?? 0,
+                oleo_diesel_b_s10_comum: element.region_station_OLEO_DIESEL_B_S10_COMUM_comb ?? 0,
+                oleo_diesel_b_s500_comum: element.region_station_OLEO_DIESEL_B_S500_COMUM_comb ?? 0
+
+            }));
+
+            regions.forEach(regions => {
+
+                const existsInResult = finalTM.some(item => item.id === regions.regions_uuid);
+
+                if (!existsInResult) {
+                    finalTM.push({
+                        region_name: regions.regions_name ?? "",
+                        id: regions.regions_uuid ?? 0,
+                        tmp: 0,
+                        tmf: 0,
+                        tmc: 0,
+                        tmvol: 0,
+                        mlt: 0,
+                        tm_lucro_bruto_operacional: 0,
+                        tm_lucro_bruto_operacional_galonagem: 0,
+                        tm_lucro_bruto_operacional_produto: 0,
+                        etanol_comum: 0,
+                        gasolina_comum: 0,
+                        oleo_diesel_b_s10_comum: 0,
+                        oleo_diesel_b_s500_comum: 0,
+                    });
+                }
+            });
+
+
+            return res.status(200).json({ data: finalTM })
+
+        } catch (error) {
+            return res.status(500).json({ message: `Não foi possível retornar os dados!: ${error}` })
+        }
+
+    }
 
 
 }
