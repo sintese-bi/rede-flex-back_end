@@ -50,6 +50,7 @@ model ibm_info {
   ibm_margin_GASOLINA_PODIUM              Float[]
   ibm_margin_GASOLINA_PREMIUM             Float[]
   ibm_margin_DIESEL_GROUP                 Float[]
+  ibm_margin_DIESEL_GROUP_S500            Float[]
   gasStationSetVariables                  gas_station_setvariables[]
 }
 
@@ -100,6 +101,11 @@ model gas_station_setvariables {
   gas_station_sanado_margin_GASOLINA_PREMIUM             Boolean?
   gas_station_type_margin_GASOLINA_PREMIUM               Boolean?
   verification_hour_margin_GASOLINA_PREMIUM              DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_margin_DIESEL_GROUP_S500                   Float?
+  gas_station_sanado_hour_margin_DIESEL_GROUP_S500       DateTime?
+  gas_station_sanado_margin_DIESEL_GROUP_S500            Boolean?
+  gas_station_type_margin_DIESEL_GROUP_S500              Boolean?
+  verification_hour_margin_DIESEL_GROUP_S500             DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
   ibm_info                                               ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
@@ -150,6 +156,11 @@ model region_setvariables {
   region_type_margin_GASOLINA_PREMIUM                   Boolean?
   verification_hour_margin_GASOLINA_PREMIUM             DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
   region_sanado_hour_GASOLINA_PREMIUM                   DateTime?
+  region_margin_DIESEL_GROUP_S500                       Float?
+  region_sanado_hour_margin_DIESEL_GROUP_S500           DateTime?
+  region_sanado_margin_DIESEL_GROUP_S500                Boolean?
+  region_type_margin_DIESEL_GROUP_S500                  Boolean?
+  verification_hour_margin_DIESEL_GROUP_S500            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
   regions                                               regions?  @relation(fields: [regions_uuid], references: [regions_uuid])
   users                                                 users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
@@ -165,6 +176,7 @@ model regions {
   regions_margin_GASOLINA_PODIUM              Float[]
   regions_margin_GASOLINA_PREMIUM             Float[]
   regions_margin_DIESEL_GROUP                 Float[]
+  regions_margin_DIESEL_GROUP_S500            Float[]
   regionSetVariables                          region_setvariables[]
 }
 
