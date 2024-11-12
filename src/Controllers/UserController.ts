@@ -68,14 +68,41 @@ class UserController {
             const saltRounds = 10;
             const passwordHash: string = bcrypt.hashSync(use_password, saltRounds);
 
-            await prisma.users.create({
+            const idUser = await prisma.users.create({
                 data: {
                     use_email: use_email,
                     use_password: passwordHash,
                     use_name: use_name
 
-                }
+                },
+                select: { use_uuid: true }
             })
+            const stations = (await prisma.ibm_info.findMany({ select: { id: true } })).map(element => element.id)
+            const regions = (await prisma.regions.findMany({ select: { regions_uuid: true } })).map(element => element.regions_uuid)
+            await Promise.all(
+                stations.map(async (value) => {
+                    return prisma.gas_station_setvariables.create({
+                        data: {
+                            ibm_info_id: value,
+                            use_uuid: idUser.use_uuid
+
+                        },
+
+                    });
+                })
+            );
+            await Promise.all(
+                regions.map(async (value) => {
+                    return prisma.region_setvariables.create({
+                        data: {
+                            regions_uuid: value,
+                            use_uuid: idUser.use_uuid
+
+                        },
+
+                    });
+                })
+            );
 
             const emailBody = `
                 <p>Olá,${use_name}</p>
@@ -91,17 +118,17 @@ class UserController {
             };
 
             // Enviar o email
-            transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    console.error(error);
-                    return res.status(500).json({ message: "Erro ao enviar o email." });
-                } else {
-                    return res.status(200).json({
+            // transporter.sendMail(mailOptions, function (error, info) {
+            //     if (error) {
+            //         console.error(error);
+            //         return res.status(500).json({ message: "Erro ao enviar o email." });
+            //     } else {
+            //         return res.status(200).json({
 
-                        message: "Email enviado com sucesso! ",
-                    });
-                }
-            });
+            //             message: "Email enviado com sucesso! ",
+            //         });
+            //     }
+            // });
             return res.status(200).json({ message: 'Seus dados foram cadastrados com sucesso!' })
 
         } catch (error) {
