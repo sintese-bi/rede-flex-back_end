@@ -35,149 +35,149 @@ model users {
 }
 
 model ibm_info {
-  ibm                                     String?                    @db.VarChar(255)
-  nomefantasia                            String?                    @db.VarChar(255)
-  cnpj                                    String?                    @db.VarChar(255)
-  razaosocial                             String?                    @db.VarChar(255)
-  cep                                     String?                    @db.VarChar(255)
-  lat                                     Float?
-  long                                    Float?
-  id                                      String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  endereco                                String?                    @db.VarChar(255)
-  regional                                String?                    @db.VarChar(255)
-  ibm_margin_GC                           Float[]
-  ibm_margin_ETANOL_HIDRATADO_COMBUSTIVEL Float[]
-  ibm_margin_GASOLINA_PODIUM              Float[]
-  ibm_margin_GASOLINA_PREMIUM             Float[]
-  ibm_margin_DIESEL_GROUP                 Float[]
-  ibm_margin_DIESEL_GROUP_S500            Float[]
-  gasStationSetVariables                  gas_station_setvariables[]
+  ibm                          String?                    @db.VarChar(255)
+  nomefantasia                 String?                    @db.VarChar(255)
+  cnpj                         String?                    @db.VarChar(255)
+  razaosocial                  String?                    @db.VarChar(255)
+  cep                          String?                    @db.VarChar(255)
+  lat                          Float?
+  long                         Float?
+  id                           String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  endereco                     String?                    @db.VarChar(255)
+  regional                     String?                    @db.VarChar(255)
+  ibm_margin_GC                Float[]
+  ibm_margin_GASOLINA_PODIUM   Float[]
+  ibm_margin_GASOLINA_PREMIUM  Float[]
+  ibm_margin_DIESEL_GROUP      Float[]
+  ibm_margin_DIESEL_GROUP_S500 Float[]
+  ibm_margin_ETANOL_COMUM      Float[]
+  gasStationSetVariables       gas_station_setvariables[]
 }
 
 model gas_station_setvariables {
-  gas_station_uuid                                       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  gas_station_marginGC                                   Float?
-  gas_station_type_marginGC                              Boolean?
-  gas_station_whats_app                                  String[]  @db.VarChar(255)
-  gas_station_created_at                                 DateTime  @default(now()) @db.Timestamp(6)
-  gas_station_updated_at                                 DateTime  @default(now()) @db.Timestamp(6)
-  ibm_info_id                                            String?   @db.Uuid
-  use_uuid                                               String?   @db.Uuid
-  verification_msg_sent                                  Boolean?  @default(false)
-  verification_hour_marginGC                             DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  gas_station_margin_ETANOL_HIDRATADO_COMBUSTIVEL        Float?
-  gas_station_type_margin_ETANOL_HIDRATADO_COMBUSTIVEL   Boolean?
-  verification_hour_margin_ETANOL_HIDRATADO_COMBUSTIVEL  DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  gas_station_sanado_hour_ETANOL_HIDRATADO_COMBUSTIVEL   DateTime?
-  gas_station_sanado_hour_marginGC                       DateTime?
-  gas_station_sanado_marginGC                            Boolean?
-  gas_station_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL Boolean?
-  gas_station_margin_MLT                                 Float?
-  gas_station_margin_TMP                                 Float?
-  gas_station_LUCRO_BRUTO_GALONAGEM_modal                Float?
-  gas_station_LUCRO_BRUTO_OPERACIONAL_modal              Float?
-  gas_station_LUCRO_BRUTO_PRODUTO_modal                  Float?
-  gas_station_MLT_modal                                  Float?
-  gas_station_TMC_modal                                  Float?
-  gas_station_TMF_modal                                  Float?
-  gas_station_TMP_modal                                  Float?
-  gas_station_TMVOL_modal                                Float?
-  gas_station_ETANOL_COMUM_comb                          Float?
-  gas_station_GASOLINA_COMUM_comb                        Float?
-  gas_station_OLEO_DIESEL_B_S10_COMUM_comb               Float?
-  gas_station_OLEO_DIESEL_B_S500_COMUM_comb              Float?
-  gas_station_margin_DIESEL_GROUP                        Float?
-  gas_station_sanado_hour_margin_DIESEL_GROUP            DateTime?
-  gas_station_sanado_margin_DIESEL_GROUP                 Boolean?
-  gas_station_type_margin_DIESEL_GROUP                   Boolean?
-  verification_hour_margin_DIESEL_GROUP                  DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  gas_station_margin_GASOLINA_PODIUM                     Float?
-  gas_station_sanado_hour_margin_GASOLINA_PODIUM         DateTime?
-  gas_station_sanado_margin_GASOLINA_PODIUM              Boolean?
-  gas_station_type_margin_GASOLINA_PODIUM                Boolean?
-  verification_hour_margin_GASOLINA_PODIUM               DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  gas_station_margin_GASOLINA_PREMIUM                    Float?
-  gas_station_sanado_hour_margin_GASOLINA_PREMIUM        DateTime?
-  gas_station_sanado_margin_GASOLINA_PREMIUM             Boolean?
-  gas_station_type_margin_GASOLINA_PREMIUM               Boolean?
-  verification_hour_margin_GASOLINA_PREMIUM              DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  gas_station_margin_DIESEL_GROUP_S500                   Float?
-  gas_station_sanado_hour_margin_DIESEL_GROUP_S500       DateTime?
-  gas_station_sanado_margin_DIESEL_GROUP_S500            Boolean?
-  gas_station_type_margin_DIESEL_GROUP_S500              Boolean?
-  verification_hour_margin_DIESEL_GROUP_S500             DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  ibm_info                                               ibm_info? @relation(fields: [ibm_info_id], references: [id])
-  users                                                  users?    @relation(fields: [use_uuid], references: [use_uuid])
+  gas_station_uuid                                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  gas_station_marginGC                             Float?
+  gas_station_type_marginGC                        Boolean?
+  gas_station_whats_app                            String[]  @db.VarChar(255)
+  gas_station_created_at                           DateTime  @default(now()) @db.Timestamp(6)
+  gas_station_updated_at                           DateTime  @default(now()) @db.Timestamp(6)
+  ibm_info_id                                      String?   @db.Uuid
+  use_uuid                                         String?   @db.Uuid
+  verification_msg_sent                            Boolean?  @default(false)
+  verification_hour_marginGC                       DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_sanado_hour_marginGC                 DateTime?
+  gas_station_sanado_marginGC                      Boolean?
+  gas_station_margin_MLT                           Float?
+  gas_station_margin_TMP                           Float?
+  gas_station_LUCRO_BRUTO_GALONAGEM_modal          Float?
+  gas_station_LUCRO_BRUTO_OPERACIONAL_modal        Float?
+  gas_station_LUCRO_BRUTO_PRODUTO_modal            Float?
+  gas_station_MLT_modal                            Float?
+  gas_station_TMC_modal                            Float?
+  gas_station_TMF_modal                            Float?
+  gas_station_TMP_modal                            Float?
+  gas_station_TMVOL_modal                          Float?
+  gas_station_ETANOL_COMUM_comb                    Float?
+  gas_station_GASOLINA_COMUM_comb                  Float?
+  gas_station_OLEO_DIESEL_B_S10_COMUM_comb         Float?
+  gas_station_OLEO_DIESEL_B_S500_COMUM_comb        Float?
+  gas_station_margin_DIESEL_GROUP                  Float?
+  gas_station_sanado_hour_margin_DIESEL_GROUP      DateTime?
+  gas_station_sanado_margin_DIESEL_GROUP           Boolean?
+  gas_station_type_margin_DIESEL_GROUP             Boolean?
+  verification_hour_margin_DIESEL_GROUP            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_margin_GASOLINA_PODIUM               Float?
+  gas_station_sanado_hour_margin_GASOLINA_PODIUM   DateTime?
+  gas_station_sanado_margin_GASOLINA_PODIUM        Boolean?
+  gas_station_type_margin_GASOLINA_PODIUM          Boolean?
+  verification_hour_margin_GASOLINA_PODIUM         DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_margin_GASOLINA_PREMIUM              Float?
+  gas_station_sanado_hour_margin_GASOLINA_PREMIUM  DateTime?
+  gas_station_sanado_margin_GASOLINA_PREMIUM       Boolean?
+  gas_station_type_margin_GASOLINA_PREMIUM         Boolean?
+  verification_hour_margin_GASOLINA_PREMIUM        DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_margin_DIESEL_GROUP_S500             Float?
+  gas_station_sanado_hour_margin_DIESEL_GROUP_S500 DateTime?
+  gas_station_sanado_margin_DIESEL_GROUP_S500      Boolean?
+  gas_station_type_margin_DIESEL_GROUP_S500        Boolean?
+  verification_hour_margin_DIESEL_GROUP_S500       DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_margin_ETANOL_COMUM                  Float?
+  gas_station_sanado_hour_ETANOL_COMUM             DateTime?
+  gas_station_sanado_margin_ETANOL_COMUM           Boolean?
+  gas_station_type_margin_ETANOL_COMUM             Boolean?
+  verification_hour_margin_ETANOL_COMUM            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  ibm_info                                         ibm_info? @relation(fields: [ibm_info_id], references: [id])
+  users                                            users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
 
 model region_setvariables {
-  region_uuid                                           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  region_marginGC                                       Float?
-  region_type_marginGC                                  Boolean?
-  region_whats_app                                      String[]  @db.VarChar(255)
-  region_station_created_at                             DateTime  @default(now()) @db.Timestamp(6)
-  region_station_updated_at                             DateTime  @default(now()) @db.Timestamp(6)
-  use_uuid                                              String?   @db.Uuid
-  regions_uuid                                          String?   @db.Uuid
-  verification_msg_sent                                 Boolean?  @default(false)
-  verification_hour_marginGC                            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  region_margin_ETANOL_HIDRATADO_COMBUSTIVEL            Float?
-  region_type_margin_ETANOL_HIDRATADO_COMBUSTIVEL       Boolean?
-  verification_hour_margin_ETANOL_HIDRATADO_COMBUSTIVEL DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  region_sanado_hour_ETANOL_HIDRATADO_COMBUSTIVEL       DateTime?
-  region_sanado_hour_marginGC                           DateTime?
-  region_sanado_marginGC                                Boolean?
-  region_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL     Boolean?
-  region_station_ETANOL_COMUM_comb                      Float?
-  region_station_GASOLINA_COMUM_comb                    Float?
-  region_station_LUCRO_BRUTO_GALONAGEM_modal            Float?
-  region_station_LUCRO_BRUTO_OPERACIONAL_modal          Float?
-  region_station_LUCRO_BRUTO_PRODUTO_modal              Float?
-  region_station_MLT_modal                              Float?
-  region_station_OLEO_DIESEL_B_S10_COMUM_comb           Float?
-  region_station_OLEO_DIESEL_B_S500_COMUM_comb          Float?
-  region_station_TMC_modal                              Float?
-  region_station_TMF_modal                              Float?
-  region_station_TMP_modal                              Float?
-  region_station_TMVOL_modal                            Float?
-  region_margin_DIESEL_GROUP                            Float?
-  region_sanado_hour_margin_DIESEL_GROUP                DateTime?
-  region_sanado_margin_DIESEL_GROUP                     Boolean?
-  region_type_margin_DIESEL_GROUP                       Boolean?
-  verification_hour_margin_DIESEL_GROUP                 DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  region_margin_GASOLINA_PODIUM                         Float?
-  region_sanado_hour_GASOLINA_PODIUM                    DateTime?
-  region_sanado_margin_GASOLINA_PODIUM                  Boolean?
-  region_type_margin_GASOLINA_PODIUM                    Boolean?
-  verification_hour_margin_GASOLINA_PODIUM              DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  region_margin_GASOLINA_PREMIUM                        Float?
-  region_sanado_hour_margin_GASOLINA_PREMIUM            DateTime?
-  region_sanado_margin_GASOLINA_PREMIUM                 Boolean?
-  region_type_margin_GASOLINA_PREMIUM                   Boolean?
-  verification_hour_margin_GASOLINA_PREMIUM             DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  region_sanado_hour_GASOLINA_PREMIUM                   DateTime?
-  region_margin_DIESEL_GROUP_S500                       Float?
-  region_sanado_hour_margin_DIESEL_GROUP_S500           DateTime?
-  region_sanado_margin_DIESEL_GROUP_S500                Boolean?
-  region_type_margin_DIESEL_GROUP_S500                  Boolean?
-  verification_hour_margin_DIESEL_GROUP_S500            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
-  regions                                               regions?  @relation(fields: [regions_uuid], references: [regions_uuid])
-  users                                                 users?    @relation(fields: [use_uuid], references: [use_uuid])
+  region_uuid                                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  region_marginGC                              Float?
+  region_type_marginGC                         Boolean?
+  region_whats_app                             String[]  @db.VarChar(255)
+  region_station_created_at                    DateTime  @default(now()) @db.Timestamp(6)
+  region_station_updated_at                    DateTime  @default(now()) @db.Timestamp(6)
+  use_uuid                                     String?   @db.Uuid
+  regions_uuid                                 String?   @db.Uuid
+  verification_msg_sent                        Boolean?  @default(false)
+  verification_hour_marginGC                   DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_sanado_hour_marginGC                  DateTime?
+  region_sanado_marginGC                       Boolean?
+  region_station_ETANOL_COMUM_comb             Float?
+  region_station_GASOLINA_COMUM_comb           Float?
+  region_station_LUCRO_BRUTO_GALONAGEM_modal   Float?
+  region_station_LUCRO_BRUTO_OPERACIONAL_modal Float?
+  region_station_LUCRO_BRUTO_PRODUTO_modal     Float?
+  region_station_MLT_modal                     Float?
+  region_station_OLEO_DIESEL_B_S10_COMUM_comb  Float?
+  region_station_OLEO_DIESEL_B_S500_COMUM_comb Float?
+  region_station_TMC_modal                     Float?
+  region_station_TMF_modal                     Float?
+  region_station_TMP_modal                     Float?
+  region_station_TMVOL_modal                   Float?
+  region_margin_DIESEL_GROUP                   Float?
+  region_sanado_hour_margin_DIESEL_GROUP       DateTime?
+  region_sanado_margin_DIESEL_GROUP            Boolean?
+  region_type_margin_DIESEL_GROUP              Boolean?
+  verification_hour_margin_DIESEL_GROUP        DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_margin_GASOLINA_PODIUM                Float?
+  region_sanado_hour_GASOLINA_PODIUM           DateTime?
+  region_sanado_margin_GASOLINA_PODIUM         Boolean?
+  region_type_margin_GASOLINA_PODIUM           Boolean?
+  verification_hour_margin_GASOLINA_PODIUM     DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_margin_GASOLINA_PREMIUM               Float?
+  region_sanado_hour_margin_GASOLINA_PREMIUM   DateTime?
+  region_sanado_margin_GASOLINA_PREMIUM        Boolean?
+  region_type_margin_GASOLINA_PREMIUM          Boolean?
+  verification_hour_margin_GASOLINA_PREMIUM    DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_sanado_hour_GASOLINA_PREMIUM          DateTime?
+  region_margin_DIESEL_GROUP_S500              Float?
+  region_sanado_hour_margin_DIESEL_GROUP_S500  DateTime?
+  region_sanado_margin_DIESEL_GROUP_S500       Boolean?
+  region_type_margin_DIESEL_GROUP_S500         Boolean?
+  verification_hour_margin_DIESEL_GROUP_S500   DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  region_margin_ETANOL_COMUM                   Float?
+  region_sanado_hour_ETANOL_COMUM              DateTime?
+  region_sanado_margin_ETANOL_COMUM            Boolean?
+  region_type_margin_ETANOL_COMUM              Boolean?
+  verification_hour_margin_ETANOL_COMUM        DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  regions                                      regions?  @relation(fields: [regions_uuid], references: [regions_uuid])
+  users                                        users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
 
 model regions {
-  regions_uuid                                String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  regions_name                                String?               @db.VarChar(50)
-  regions_types                               String?               @db.VarChar(50)
-  region_created_at                           DateTime              @default(now()) @db.Timestamp(6)
-  region_updated_at                           DateTime              @default(now()) @db.Timestamp(6)
-  regions_margin_GC                           Float[]
-  regions_margin_ETANOL_HIDRATADO_COMBUSTIVEL Float[]
-  regions_margin_GASOLINA_PODIUM              Float[]
-  regions_margin_GASOLINA_PREMIUM             Float[]
-  regions_margin_DIESEL_GROUP                 Float[]
-  regions_margin_DIESEL_GROUP_S500            Float[]
-  regionSetVariables                          region_setvariables[]
+  regions_uuid                     String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  regions_name                     String?               @db.VarChar(50)
+  regions_types                    String?               @db.VarChar(50)
+  region_created_at                DateTime              @default(now()) @db.Timestamp(6)
+  region_updated_at                DateTime              @default(now()) @db.Timestamp(6)
+  regions_margin_GC                Float[]
+  regions_margin_GASOLINA_PODIUM   Float[]
+  regions_margin_GASOLINA_PREMIUM  Float[]
+  regions_margin_DIESEL_GROUP      Float[]
+  regions_margin_DIESEL_GROUP_S500 Float[]
+  regions_margin_ETANOL_COMUM      Float[]
+  regionSetVariables               region_setvariables[]
 }
 
 model big_numbers_values {
