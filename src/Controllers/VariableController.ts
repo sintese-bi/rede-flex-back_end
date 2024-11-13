@@ -325,10 +325,10 @@ class VariablesController {
                             nomefantasia: true,
                         },
                     },
-                    gas_station_sanado_hour_ETANOL_HIDRATADO_COMBUSTIVEL: true,
+                    gas_station_sanado_hour_ETANOL_COMUM: true,
                     gas_station_sanado_hour_marginGC: true,
                     gas_station_sanado_marginGC: true,
-                    gas_station_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL: true,
+                    gas_station_sanado_margin_ETANOL_COMUM: true,
                 }, where: { use_uuid: use_uuid }
             })
             //Tratamento de logs por posto
@@ -336,10 +336,10 @@ class VariablesController {
                 const { ibm_info, ...values } = element;
                 const station_name = element.ibm_info?.nomefantasia
                 const conditionMarginGC = element.gas_station_sanado_marginGC == true ? "sanado" : "não sanado"
-                const conditionMarginETANOL_HIDRATADO_COMBUSTIVEL = element.gas_station_sanado_margin_ETANOL_HIDRATADO_COMBUSTIVEL == true ? "sanado" : "não sanado"
+                const conditionMarginETANOL_COMUM = element.gas_station_sanado_margin_ETANOL_COMUM == true ? "sanado" : "não sanado"
 
                 return [{ date: element.gas_station_sanado_hour_marginGC?.toISOString().split('T')[1].split('.')[0], variable_name: "Gasolina Comum", condition: conditionMarginGC, station_name: station_name },
-                { date: element.gas_station_sanado_hour_marginGC?.toISOString().split('T')[1].split('.')[0], variable_name: "Etanol Hidratado Combustível", condition: conditionMarginETANOL_HIDRATADO_COMBUSTIVEL, station_name: station_name }
+                { date: element.gas_station_sanado_hour_marginGC?.toISOString().split('T')[1].split('.')[0], variable_name: "Etanol Hidratado Combustível", condition: conditionMarginETANOL_COMUM, station_name: station_name }
                 ]
             });
 

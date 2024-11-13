@@ -118,17 +118,17 @@ class UserController {
             };
 
             // Enviar o email
-            // transporter.sendMail(mailOptions, function (error, info) {
-            //     if (error) {
-            //         console.error(error);
-            //         return res.status(500).json({ message: "Erro ao enviar o email." });
-            //     } else {
-            //         return res.status(200).json({
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.error(error);
+                    return res.status(500).json({ message: "Erro ao enviar o email." });
+                } else {
+                    return res.status(200).json({
 
-            //             message: "Email enviado com sucesso! ",
-            //         });
-            //     }
-            // });
+                        message: "Email enviado com sucesso! ",
+                    });
+                }
+            });
             return res.status(200).json({ message: 'Seus dados foram cadastrados com sucesso!' })
 
         } catch (error) {
