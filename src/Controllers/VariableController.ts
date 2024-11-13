@@ -1031,8 +1031,10 @@ class VariablesController {
                 }
             });
 
+            const value = finalTM[0]
+            const { nome_fantasia, id: idAlias, ...newObject } = value;
 
-            return res.status(200).json({ data: finalTM })
+            return res.status(200).json({ data: newObject })
 
         } catch (error) {
             return res.status(500).json({ message: `Não foi possível retornar os dados!: ${error}` })
@@ -1165,8 +1167,9 @@ class VariablesController {
                 }
             });
 
-
-            return res.status(200).json({ data: finalTM })
+            const value = finalTM[0]
+            const { region_name, id: idAlias, ...newObject } = value;
+            return res.status(200).json({ data: newObject })
 
         } catch (error) {
             return res.status(500).json({ message: `Não foi possível retornar os dados!: ${error}` })
