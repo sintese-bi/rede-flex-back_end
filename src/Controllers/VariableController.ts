@@ -212,9 +212,24 @@ class VariablesController {
                 }
                 return element;
             });
+            const ibmvaluesMapData = dataStructured.map((element: any) => {
+                if (
+                    (element as { "M/LT": number })["M/LT"] === 0 &&
+                    element.TMC === 0 &&
+                    element.TMF === 0 &&
+                    element.TMP === 0 &&
+                    element.LBO === 0 &&
+                    element.LBOProduto === 0 &&
+                    element.LBOGalonagem === 0 &&
+                    element["TM VOL"] === 0
+                ) {
+                    return { ...element, averageComparison: 3 };
+                }
+                return element;
+            });
 
 
-            return res.status(200).json({ data: dataStructured })
+            return res.status(200).json({ data: ibmvaluesMapData })
 
 
         } catch (error) {
@@ -327,19 +342,38 @@ class VariablesController {
                     },
                     gas_station_sanado_hour_ETANOL_COMUM: true,
                     gas_station_sanado_hour_marginGC: true,
+                    gas_station_sanado_hour_margin_DIESEL_GROUP: true,
+                    gas_station_sanado_hour_margin_DIESEL_GROUP_S500: true,
+                    gas_station_sanado_hour_margin_GASOLINA_PODIUM: true,
+                    gas_station_sanado_hour_margin_GASOLINA_PREMIUM: true,
+                    gas_station_sanado_margin_DIESEL_GROUP: true,
                     gas_station_sanado_marginGC: true,
                     gas_station_sanado_margin_ETANOL_COMUM: true,
+                    gas_station_sanado_margin_DIESEL_GROUP_S500: true,
+                    gas_station_sanado_margin_GASOLINA_PODIUM: true,
+                    gas_station_sanado_margin_GASOLINA_PREMIUM: true
+
                 }, where: { use_uuid: use_uuid }
             })
             //Tratamento de logs por posto
             const resultMod = result.map(element => {
                 const { ibm_info, ...values } = element;
                 const station_name = element.ibm_info?.nomefantasia
-                const conditionMarginGC = element.gas_station_sanado_marginGC == true ? "sanado" : "não sanado"
-                const conditionMarginETANOL_COMUM = element.gas_station_sanado_margin_ETANOL_COMUM == true ? "sanado" : "não sanado"
+                const conditionMarginGC = (element.gas_station_sanado_marginGC === true || element.gas_station_sanado_marginGC === null) ? "sanado" : "não sanado";
+                const conditionMarginETANOL_COMUM = (element.gas_station_sanado_margin_ETANOL_COMUM === true || element.gas_station_sanado_margin_ETANOL_COMUM === null) ? "sanado" : "não sanado";
+                const conditionMarginDIESELS10 = (element.gas_station_sanado_margin_DIESEL_GROUP === true || element.gas_station_sanado_margin_DIESEL_GROUP === null) ? "sanado" : "não sanado";
+                const conditionMarginDIESELS500 = (element.gas_station_sanado_margin_DIESEL_GROUP_S500 === true || element.gas_station_sanado_margin_DIESEL_GROUP_S500 === null) ? "sanado" : "não sanado";
+                const conditionMarginGASOLINAPODIUM = (element.gas_station_sanado_margin_GASOLINA_PODIUM === true || element.gas_station_sanado_margin_GASOLINA_PODIUM === null) ? "sanado" : "não sanado";
+                const conditionMarginGASOLINAPREMIUM = (element.gas_station_sanado_margin_GASOLINA_PREMIUM === true || element.gas_station_sanado_margin_GASOLINA_PREMIUM === null) ? "sanado" : "não sanado";
+
 
                 return [{ date: element.gas_station_sanado_hour_marginGC?.toISOString().split('T')[1].split('.')[0], variable_name: "Gasolina Comum", condition: conditionMarginGC, station_name: station_name },
-                { date: element.gas_station_sanado_hour_marginGC?.toISOString().split('T')[1].split('.')[0], variable_name: "Etanol Hidratado Combustível", condition: conditionMarginETANOL_COMUM, station_name: station_name }
+                { date: element.gas_station_sanado_hour_ETANOL_COMUM?.toISOString().split('T')[1].split('.')[0], variable_name: "Etanol Comum", condition: conditionMarginETANOL_COMUM, station_name: station_name },
+                { date: element.gas_station_sanado_hour_margin_DIESEL_GROUP?.toISOString().split('T')[1].split('.')[0], variable_name: "Diesel S10", condition: conditionMarginDIESELS10, station_name: station_name },
+                { date: element.gas_station_sanado_hour_margin_DIESEL_GROUP_S500?.toISOString().split('T')[1].split('.')[0], variable_name: "Diesel S500", condition: conditionMarginDIESELS500, station_name: station_name },
+                { date: element.gas_station_sanado_hour_margin_GASOLINA_PODIUM?.toISOString().split('T')[1].split('.')[0], variable_name: "Gasolina Podium", condition: conditionMarginGASOLINAPODIUM, station_name: station_name },
+                { date: element.gas_station_sanado_hour_margin_GASOLINA_PREMIUM?.toISOString().split('T')[1].split('.')[0], variable_name: "Gasolina Premium", condition: conditionMarginGASOLINAPREMIUM, station_name: station_name },
+
                 ]
             });
 
@@ -351,7 +385,7 @@ class VariablesController {
 
 
 
-            return res.status(200).json({ data: { sanados: sanadoList, quant_sanados: sanadoList.length, nãoSanados: naoSanadoList } })
+            return res.status(200).json({ data: { sanados: sanadoList, quant_nao_sanados: naoSanadoList.length, nãoSanados: naoSanadoList } })
 
 
         } catch (error) {
@@ -407,7 +441,7 @@ class VariablesController {
             })
             if (filter === "station") {
 
-                const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
+                const validVariableNames = ["marginGC", "marginGasolinaPodium", "marginGasolinaPremium", "marginDieselS10", "marginDieselS500", "marginEtanolComum"];
                 if (!validVariableNames.includes(variable_name)) {
                     return res.status(400).json({ message: "Nome de variável inválido" });
                 }
@@ -431,15 +465,39 @@ class VariablesController {
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        // case "marginAL":
-                        //     await prisma.gas_station_setvariables.update({
+                        case "marginGasolinaPodium":
+                            await prisma.gas_station_setvariables.update({
 
 
 
-                        //         data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated },
-                        //         where: { gas_station_uuid: result.gas_station_uuid }
-                        //     })
-                        //     break
+                                data: { gas_station_margin_GASOLINA_PODIUM: variable_value, gas_station_type_margin_GASOLINA_PODIUM: value_type, gas_station_whats_app: telephonesFormated },
+                                where: { gas_station_uuid: result.gas_station_uuid }
+                            })
+                            break
+                        case "marginGasolinaPremium":
+                            await prisma.gas_station_setvariables.update({
+                                data: { gas_station_margin_GASOLINA_PREMIUM: variable_value, gas_station_type_margin_GASOLINA_PREMIUM: value_type, gas_station_whats_app: telephonesFormated },
+                                where: { gas_station_uuid: result.gas_station_uuid }
+                            })
+                            break
+                        case "marginDieselS10":
+                            await prisma.gas_station_setvariables.update({
+                                data: { gas_station_margin_DIESEL_GROUP: variable_value, gas_station_type_margin_DIESEL_GROUP: value_type, gas_station_whats_app: telephonesFormated },
+                                where: { gas_station_uuid: result.gas_station_uuid }
+                            })
+                            break
+                        case "marginDieselS500":
+                            await prisma.gas_station_setvariables.update({
+                                data: { gas_station_margin_DIESEL_GROUP_S500: variable_value, gas_station_type_margin_DIESEL_GROUP_S500: value_type, gas_station_whats_app: telephonesFormated },
+                                where: { gas_station_uuid: result.gas_station_uuid }
+                            })
+                            break
+                        case "marginEtanolComum":
+                            await prisma.gas_station_setvariables.update({
+                                data: { gas_station_margin_ETANOL_COMUM: variable_value, gas_station_type_margin_ETANOL_COMUM: value_type, gas_station_whats_app: telephonesFormated },
+                                where: { gas_station_uuid: result.gas_station_uuid }
+                            })
+                            break
                     }
                 }
                 //Se não existir é criado
@@ -448,82 +506,130 @@ class VariablesController {
                         case "marginGC":
                             await prisma.gas_station_setvariables.create({
 
-                                data: { gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
+                                data: {
+                                    gas_station_marginGC: variable_value, gas_station_type_marginGC: value_type,
+                                    gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id
+                                },
 
                             })
                             break
-                        // case "marginAL":
-                        //     await prisma.gas_station_setvariables.create({
+                        case "marginGasolinaPodium":
+                            await prisma.gas_station_setvariables.create({
 
-                        //         data: { gas_station_marginAL: variable_value, gas_station_type_marginAL: value_type, gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id },
-
-                        //     })
-                        //     break
-                    }
-                }
-
-                return res.status(200).json({ message: "Dados atualizados com sucesso!" })
-            } else if (filter === "region") {
-
-                const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
-                if (!validVariableNames.includes(variable_name)) {
-                    return res.status(400).json({ message: "Nome de variável inválido" });
-                }
-
-                //Buscando se aquele posto para aquele usuário já foi criado no Banco de Dados
-                const result = await prisma.region_setvariables.findFirst({
-                    select: { region_uuid: true },
-                    where: { use_uuid: use_uuid, regions_uuid: ibm_id }
-
-                })
-                const telephonesFormated = telephones.map(element => {
-                    const indexToRemove = 2
-                    const str = element.slice(0, indexToRemove) + element.slice(indexToRemove + 1)
-                    const newStr = `+55${str}`
-                    return newStr
-                })
-                //Se ele existir é atualizada a linha respectiva com a variável nova
-                if (result) {
-                    switch (variable_name) {
-                        case "marginGC":
-                            await prisma.region_setvariables.update({
-
-                                data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephonesFormated },
-                                where: { region_uuid: result.region_uuid }
-                            })
-                            break
-                        // case "marginAL":
-                        //     await prisma.region_setvariables.update({
-
-                        //         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated },
-                        //         where: { region_uuid: result.region_uuid }
-                        //     })
-                        //     break
-
-                    }
-                }
-                //Se não existir é criado
-                else if (!result) {
-                    switch (variable_name) {
-                        case "marginGC":
-                            await prisma.region_setvariables.create({
-
-                                data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: {
+                                    gas_station_margin_GASOLINA_PODIUM: variable_value, gas_station_type_margin_GASOLINA_PODIUM: value_type,
+                                    gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id
+                                },
 
                             })
                             break
-                        // case "marginAL":
-                        //     await prisma.region_setvariables.create({
+                        case "marginGasolinaPremium":
+                            await prisma.gas_station_setvariables.create({
 
-                        //         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
+                                data: {
+                                    gas_station_margin_GASOLINA_PREMIUM: variable_value, gas_station_type_margin_GASOLINA_PREMIUM: value_type,
+                                    gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id
+                                },
 
-                        //     })
-                        //     break
+                            })
+                            break
+                        case "marginDieselS10":
+                            await prisma.gas_station_setvariables.create({
 
+                                data: {
+                                    gas_station_margin_DIESEL_GROUP: variable_value, gas_station_type_margin_DIESEL_GROUP: value_type,
+                                    gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id
+                                },
+
+                            })
+                            break
+                        case "marginDieselS500":
+                            await prisma.gas_station_setvariables.create({
+
+                                data: {
+                                    gas_station_margin_DIESEL_GROUP_S500: variable_value, gas_station_type_margin_DIESEL_GROUP_S500: value_type,
+                                    gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id
+                                },
+
+                            })
+                            break
+                        case "marginEtanolComum":
+                            await prisma.gas_station_setvariables.create({
+
+                                data: {
+                                    gas_station_margin_ETANOL_COMUM: variable_value, gas_station_type_margin_ETANOL_COMUM: value_type,
+                                    gas_station_whats_app: telephonesFormated, use_uuid: use_uuid, ibm_info_id: ibm_id
+                                },
+
+                            })
+                            break
                     }
-
                 }
 
+
+                // } else if (filter === "region") {
+
+                //     const validVariableNames = ["marginGC", "marginAL", "marginTotal", "volumeGC", "volumeAL", "volumeTotal"];
+                //     if (!validVariableNames.includes(variable_name)) {
+                //         return res.status(400).json({ message: "Nome de variável inválido" });
+                //     }
+
+                //     //Buscando se aquele posto para aquele usuário já foi criado no Banco de Dados
+                //     const result = await prisma.region_setvariables.findFirst({
+                //         select: { region_uuid: true },
+                //         where: { use_uuid: use_uuid, regions_uuid: ibm_id }
+
+                //     })
+                //     const telephonesFormated = telephones.map(element => {
+                //         const indexToRemove = 2
+                //         const str = element.slice(0, indexToRemove) + element.slice(indexToRemove + 1)
+                //         const newStr = `+55${str}`
+                //         return newStr
+                //     })
+                //     //Se ele existir é atualizada a linha respectiva com a variável nova
+                //     if (result) {
+                //         switch (variable_name) {
+                //             case "marginGC":
+                //                 await prisma.region_setvariables.update({
+
+                //                     data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephonesFormated },
+                //                     where: { region_uuid: result.region_uuid }
+                //                 })
+                //                 break
+                //             // case "marginAL":
+                //             //     await prisma.region_setvariables.update({
+
+                //             //         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated },
+                //             //         where: { region_uuid: result.region_uuid }
+                //             //     })
+                //             //     break
+
+                //         }
+                //     }
+                //     //Se não existir é criado
+                //     else if (!result) {
+                //         switch (variable_name) {
+                //             case "marginGC":
+                //                 await prisma.region_setvariables.create({
+
+                //                     data: { region_marginGC: variable_value, region_type_marginGC: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
+
+                //                 })
+                //                 break
+                //             // case "marginAL":
+                //             //     await prisma.region_setvariables.create({
+
+                //             //         data: { region_marginAL: variable_value, region_type_marginAL: value_type, region_whats_app: telephonesFormated, use_uuid: use_uuid, regions_uuid: ibm_id },
+
+                //             //     })
+                //             //     break
+
+                //         }
+
+                //     }
+                else {
+                    return res.status(400).json({ message: "Insira o valor 'station' no parâmetro" })
+                }
                 return res.status(200).json({ message: "Dados atualizados com sucesso!" })
             }
 
@@ -1133,9 +1239,9 @@ class VariablesController {
                 tmc: element.region_station_TMC_modal ?? 0,
                 tmvol: element.region_station_TMVOL_modal ?? 0,
                 mlt: element.region_station_MLT_modal ?? 0,
-                tm_lucro_bruto_operacional: (element.region_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100,
-                tm_lucro_bruto_operacional_galonagem: (element.region_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0) * 100,
-                tm_lucro_bruto_operacional_produto: (element.region_station_LUCRO_BRUTO_PRODUTO_modal ?? 0) * 100,
+                tm_lucro_bruto_operacional: Math.round((element.region_station_LUCRO_BRUTO_OPERACIONAL_modal ?? 0) * 100),
+                tm_lucro_bruto_operacional_galonagem: Math.round((element.region_station_LUCRO_BRUTO_GALONAGEM_modal ?? 0) * 100),
+                tm_lucro_bruto_operacional_produto: Math.round((element.region_station_LUCRO_BRUTO_PRODUTO_modal ?? 0) * 100),
                 etanol_comum: element.region_station_ETANOL_COMUM_comb ?? 0,
                 gasolina_comum: element.region_station_GASOLINA_COMUM_comb ?? 0,
                 oleo_diesel_b_s10_comum: element.region_station_OLEO_DIESEL_B_S10_COMUM_comb ?? 0,
