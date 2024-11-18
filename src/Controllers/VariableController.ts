@@ -28,7 +28,14 @@ type AdjustName = {
     name: string | null;
     gas_id: string;
     gas_whats_app?: string[];
-    variables: { marginGC: number | null }
+    variables: {
+        "Margem Gasolina Comum": number | null,
+        "Margem Gasolina Premium": number | null,
+        "Margem Gasolina Podium": number | null,
+        "Margem Diesel S500": number | null,
+        "Margem Diesel S10": number | null,
+        "Margem Etanol Comum": number | null
+    }
 };
 
 class VariablesController {
@@ -254,10 +261,30 @@ class VariablesController {
                     }
                 })
                 const adjustnames: AdjustName[] = result.map(element => {
-                    return { name: element.nomefantasia, gas_id: element.id, variables: { marginGC: 0 } }
-                })
+                    return {
+                        name: element.nomefantasia,
+                        gas_id: element.id,
+                        variables: {
+                            "Margem Gasolina Comum": 0,
+                            "Margem Gasolina Premium": 0,
+                            "Margem Gasolina Podium": 0,
+                            "Margem Diesel S500": 0,
+                            "Margem Diesel S10": 0,
+                            "Margem Etanol Comum": 0
+                        }
+                    }
+                });
+
                 const gas_stations = await prisma.gas_station_setvariables.findMany({
-                    select: { gas_station_whats_app: true, ibm_info_id: true, gas_station_marginGC: true },
+                    select: {
+                        gas_station_whats_app: true, ibm_info_id: true,
+                        gas_station_marginGC: true, gas_station_margin_DIESEL_GROUP: true,
+                        gas_station_margin_DIESEL_GROUP_S500: true,
+                        gas_station_margin_ETANOL_COMUM: true,
+                        gas_station_margin_GASOLINA_PODIUM: true,
+                        gas_station_margin_GASOLINA_PREMIUM: true,
+
+                    },
                     where: { use_uuid: use_uuid }
                 })
                 //Ajustando quantidade de números no telefone que retorna
@@ -268,7 +295,15 @@ class VariablesController {
                         let modified = modified0.slice(3)
                         return modified
                     })
-                    return { gas_station_whats_app: change, ibm_info_id: element.ibm_info_id, gas_marginGC: element.gas_station_marginGC }
+                    return {
+                        gas_station_whats_app: change, ibm_info_id: element.ibm_info_id,
+                        gas_marginGC: element.gas_station_marginGC,
+                        gas_marginGASOLINAPODIUM: element.gas_station_margin_GASOLINA_PODIUM,
+                        gas_marginGASOLINAPREMIUM: element.gas_station_margin_GASOLINA_PREMIUM,
+                        gas_marginDIESELS10: element.gas_station_margin_DIESEL_GROUP,
+                        gas_marginDIESELS500: element.gas_station_margin_DIESEL_GROUP_S500,
+                        gas_marginETANOLCOMUM: element.gas_station_margin_ETANOL_COMUM
+                    }
                 })
 
                 gas_stations_nine.forEach(id => {
@@ -276,8 +311,12 @@ class VariablesController {
                     adjustnames.forEach(element => {
                         if (id.ibm_info_id === element.gas_id) {
                             element.gas_whats_app = id.gas_station_whats_app;
-                            element.variables.marginGC = id.gas_marginGC
-
+                            element.variables['Margem Gasolina Comum'] = id.gas_marginGC ?? 0,
+                                element.variables['Margem Gasolina Podium'] = id.gas_marginGASOLINAPODIUM ?? 0,
+                                element.variables['Margem Gasolina Premium'] = id.gas_marginGASOLINAPREMIUM ?? 0,
+                                element.variables['Margem Diesel S10'] = id.gas_marginDIESELS10 ?? 0,
+                                element.variables['Margem Diesel S500'] = id.gas_marginDIESELS500 ?? 0,
+                                element.variables['Margem Etanol Comum'] = id.gas_marginETANOLCOMUM ?? 0
                         }
 
                     })
@@ -289,10 +328,24 @@ class VariablesController {
 
                 const result = await prisma.regions.findMany({ select: { regions_uuid: true, regions_name: true, regions_types: true } })
                 const adjustnames: AdjustName[] = result.map(element => {
-                    return { name: element.regions_name, gas_id: element.regions_uuid, variables: { marginGC: 0 } }
+                    return {
+                        name: element.regions_name, gas_id: element.regions_uuid, variables: {
+                            "Margem Gasolina Comum": 0,
+                            "Margem Gasolina Premium": 0,
+                            "Margem Gasolina Podium": 0,
+                            "Margem Diesel S500": 0,
+                            "Margem Diesel S10": 0,
+                            "Margem Etanol Comum": 0
+                        }
+                    }
                 })
                 const gas_stations = await prisma.region_setvariables.findMany({
-                    select: { region_whats_app: true, regions_uuid: true, region_marginGC: true },
+                    select: {
+                        region_whats_app: true, regions_uuid: true, region_marginGC: true,
+                        region_margin_DIESEL_GROUP: true, region_margin_DIESEL_GROUP_S500: true,
+                        region_margin_ETANOL_COMUM: true, region_margin_GASOLINA_PREMIUM: true,
+                        region_margin_GASOLINA_PODIUM: true
+                    },
                     where: { use_uuid: use_uuid }
                 })
                 const gas_stations_nine = gas_stations.map(element => {
@@ -302,14 +355,27 @@ class VariablesController {
                         let modified = modified0.slice(3)
                         return modified
                     })
-                    return { region_whats_app: change, regions_uuid: element.regions_uuid, gas_marginGC: element.region_marginGC }
+                    return {
+                        region_whats_app: change, regions_uuid: element.regions_uuid,
+                        gas_marginGC: element.region_marginGC,
+                        gas_marginGASOLINAPODIUM: element.region_margin_GASOLINA_PODIUM,
+                        gas_marginGASOLINAPREMIUM: element.region_margin_GASOLINA_PREMIUM,
+                        gas_marginDIESELS10: element.region_margin_DIESEL_GROUP,
+                        gas_marginDIESELS500: element.region_margin_DIESEL_GROUP_S500,
+                        gas_marginETANOLCOMUM: element.region_margin_ETANOL_COMUM
+                    }
                 })
                 gas_stations_nine.forEach(id => {
 
                     adjustnames.forEach(element => {
                         if (id.regions_uuid === element.gas_id) {
                             element.gas_whats_app = id.region_whats_app;
-                            element.variables.marginGC = id.gas_marginGC
+                            element.variables['Margem Gasolina Comum'] = id.gas_marginGC ?? 0,
+                                element.variables['Margem Gasolina Podium'] = id.gas_marginGASOLINAPODIUM ?? 0,
+                                element.variables['Margem Gasolina Premium'] = id.gas_marginGASOLINAPREMIUM ?? 0,
+                                element.variables['Margem Diesel S10'] = id.gas_marginDIESELS10 ?? 0,
+                                element.variables['Margem Diesel S500'] = id.gas_marginDIESELS500 ?? 0,
+                                element.variables['Margem Etanol Comum'] = id.gas_marginETANOLCOMUM ?? 0
                         }
 
                     })
@@ -318,7 +384,6 @@ class VariablesController {
 
                 return res.status(200).json({ data: adjustnames })
             }
-
 
 
         } catch (error) {
@@ -441,7 +506,8 @@ class VariablesController {
             })
             if (filter === "station") {
 
-                const validVariableNames = ["marginGC", "marginGasolinaPodium", "marginGasolinaPremium", "marginDieselS10", "marginDieselS500", "marginEtanolComum"];
+                const validVariableNames = ["Margem Gasolina Comum", "Margem Gasolina Podium",
+                    "Margem Gasolina Premium", "Margem Diesel S10", "Margem Diesel S500", "Margem Etanol Comum"];
                 if (!validVariableNames.includes(variable_name)) {
                     return res.status(400).json({ message: "Nome de variável inválido" });
                 }
@@ -456,7 +522,7 @@ class VariablesController {
                 //Se ele existir é atualizada a linha respectiva com a variável nova
                 if (result) {
                     switch (variable_name) {
-                        case "marginGC":
+                        case "Margem Gasolina Comum":
                             await prisma.gas_station_setvariables.update({
 
 
@@ -465,7 +531,7 @@ class VariablesController {
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        case "marginGasolinaPodium":
+                        case "Margem Gasolina Podium":
                             await prisma.gas_station_setvariables.update({
 
 
@@ -474,25 +540,25 @@ class VariablesController {
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        case "marginGasolinaPremium":
+                        case "Margem Gasolina Premium":
                             await prisma.gas_station_setvariables.update({
                                 data: { gas_station_margin_GASOLINA_PREMIUM: variable_value, gas_station_type_margin_GASOLINA_PREMIUM: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        case "marginDieselS10":
+                        case "Margem Diesel S10":
                             await prisma.gas_station_setvariables.update({
                                 data: { gas_station_margin_DIESEL_GROUP: variable_value, gas_station_type_margin_DIESEL_GROUP: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        case "marginDieselS500":
+                        case "Margem Diesel S500":
                             await prisma.gas_station_setvariables.update({
                                 data: { gas_station_margin_DIESEL_GROUP_S500: variable_value, gas_station_type_margin_DIESEL_GROUP_S500: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
                             })
                             break
-                        case "marginEtanolComum":
+                        case "Margem Etanol Comum":
                             await prisma.gas_station_setvariables.update({
                                 data: { gas_station_margin_ETANOL_COMUM: variable_value, gas_station_type_margin_ETANOL_COMUM: value_type, gas_station_whats_app: telephonesFormated },
                                 where: { gas_station_uuid: result.gas_station_uuid }
@@ -503,7 +569,7 @@ class VariablesController {
                 //Se não existir é criado
                 else if (!result) {
                     switch (variable_name) {
-                        case "marginGC":
+                        case "Margem Gasolina Comum":
                             await prisma.gas_station_setvariables.create({
 
                                 data: {
@@ -513,7 +579,7 @@ class VariablesController {
 
                             })
                             break
-                        case "marginGasolinaPodium":
+                        case "Margem Gasolina Podium":
                             await prisma.gas_station_setvariables.create({
 
                                 data: {
@@ -523,7 +589,7 @@ class VariablesController {
 
                             })
                             break
-                        case "marginGasolinaPremium":
+                        case "Margem Gasolina Premium":
                             await prisma.gas_station_setvariables.create({
 
                                 data: {
@@ -533,7 +599,7 @@ class VariablesController {
 
                             })
                             break
-                        case "marginDieselS10":
+                        case "Margem Diesel S10":
                             await prisma.gas_station_setvariables.create({
 
                                 data: {
@@ -543,7 +609,7 @@ class VariablesController {
 
                             })
                             break
-                        case "marginDieselS500":
+                        case "Margem Diesel S500":
                             await prisma.gas_station_setvariables.create({
 
                                 data: {
@@ -553,7 +619,7 @@ class VariablesController {
 
                             })
                             break
-                        case "marginEtanolComum":
+                        case "Margem Etanol Comum":
                             await prisma.gas_station_setvariables.create({
 
                                 data: {
