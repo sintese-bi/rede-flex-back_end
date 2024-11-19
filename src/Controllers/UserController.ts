@@ -160,7 +160,7 @@ class UserController {
 
             const checkPassword: boolean = result ? bcrypt.compareSync(use_password, result) : false;
             if (!checkPassword) {
-                return res.status(404).json({ message: "Senha inválida" });
+                return res.status(404).json({ message: "Senha inválida!" });
             }
 
             const secret = process.env.SECRET;
