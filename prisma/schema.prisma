@@ -108,6 +108,8 @@ model gas_station_setvariables {
   verification_hour_margin_ETANOL_COMUM            DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
   gas_station_invoice_comb                         Float?
   gas_station_invoice_prod                         Float?
+  gas_station_invoice_comb_daily                   Float?
+  gas_station_invoice_prod_daily                   Float?
   ibm_info                                         ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                            users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
