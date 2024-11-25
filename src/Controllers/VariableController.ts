@@ -5,6 +5,9 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import axios from 'axios';
 import moment from 'moment-timezone';
+import * as XLSX from "xlsx";
+import fs from 'fs';
+import path from 'path';
 // import cron from "node-cron"
 import jwt from 'jsonwebtoken';
 import { DatasetController } from 'chart.js';
@@ -1392,7 +1395,64 @@ class VariablesController {
         }
 
     }
+    //Função para gerar json a partir de xlsx
+    public async xlsxToJson(req: Request, res: Response) {
+        try {
 
+            const filePath = path.join(__dirname, '../../produtos.xlsx');
+
+            const workbook = XLSX.readFile(filePath);
+
+            console.log('Abas disponíveis:', workbook.SheetNames);
+            const sheetName = workbook.SheetNames[0];
+
+            if (!sheetName) {
+                return res.status(400).json({ message: 'A aba especificada não existe no arquivo Excel.' });
+            }
+
+            const sheet = workbook.Sheets[sheetName];
+            if (!sheet) {
+                return res.status(400).json({ message: 'Não foi possível carregar os dados da aba especificada.' });
+            }
+
+
+            const data: any[] = XLSX.utils.sheet_to_json(sheet);
+
+
+            const groupedData = data.reduce((acc: Record<string, any[]>, row: any) => {
+                const grupo = row['GRUPO'];
+                const produto = row['PRODUTO'];
+
+                if (!grupo || !produto) {
+                    return acc;
+                }
+
+                if (!acc[grupo]) {
+                    acc[grupo] = [];
+                }
+                acc[grupo].push(produto);
+
+                return acc;
+            }, {});
+
+            const outputFilePath = path.join(__dirname, '../../produtosAgrupados.json');
+
+
+            fs.writeFileSync(outputFilePath, JSON.stringify(groupedData, null, 2), 'utf-8');
+
+
+            return res.status(200).json({
+                message: 'JSON gerado com sucesso!',
+                filePath: outputFilePath,
+                groupedData,
+            });
+        } catch (error) {
+            console.error('Erro ao processar o arquivo Excel:', error);
+            return res
+                .status(500)
+                .json({ message: `Não foi possível retornar os dados! Detalhes: ` });
+        }
+    }
 
 
 

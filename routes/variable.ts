@@ -22,7 +22,7 @@ variableRouter.get("/modal-regions-return-tm/:use_token", checkToken, VariablesC
 //Modal por regiões geral
 variableRouter.post("/modal-regions-general-insert-tm/:use_token", checkToken, VariablesController.modalRegionsGeneralInsert)
 variableRouter.get("/modal-regions-general-return-tm/:use_token", checkToken, VariablesController.modalRegionsGeneralReturn)
-
+variableRouter.get("/xlsx", checkToken, VariablesController.xlsxToJson)
 
 variableRouter.post("/update-alert/:filter", checkToken, VariablesController.updateInfo)
 // variableRouter.post("/update-region-alert", checkToken, VariablesController.updateRegionsAlertInfo)
