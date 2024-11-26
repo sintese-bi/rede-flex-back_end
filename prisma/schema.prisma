@@ -122,6 +122,9 @@ model gas_station_setvariables {
   gas_station_sanado_margin_ADITIVOS_AUTOMOVEIS_PRODUCT      Boolean?
   gas_station_type_margin_ADITIVOS_AUTOMOVEIS_PRODUCT        Boolean?
   verification_hour_margin_ADITIVOS_AUTOMOVEIS_PRODUCT       DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
+  gas_station_freight_value                                  Float?
+  gas_station_gross_result_literage                          Float?
+  gas_station_gross_result_product                           Float?
   ibm_info                                                   ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                      users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
