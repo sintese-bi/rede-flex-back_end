@@ -806,6 +806,9 @@ class VariablesController {
                     gas_station_invoice_prod: true,
                     gas_station_invoice_comb_daily: true,
                     gas_station_invoice_prod_daily: true,
+                    gas_station_freight_value: true,
+                    gas_station_gross_result_literage: true,
+                    gas_station_gross_result_product: true,
                     gas_station_OLEO_DIESEL_B_S10_COMUM_comb: true,
                     gas_station_OLEO_DIESEL_B_S500_COMUM_comb: true,
                     ibm_info: {
@@ -841,6 +844,9 @@ class VariablesController {
                 invoice_prod: element.gas_station_invoice_prod ?? 0,
                 invoice_comb_daily: element.gas_station_invoice_comb_daily ?? 0,
                 invoice_prod_daily: element.gas_station_invoice_prod_daily ?? 0,
+                freight_value: element.gas_station_freight_value ?? 0,
+                gross_result_literage: element.gas_station_gross_result_literage ?? 0,
+                gross_result_product: element.gas_station_gross_result_product ?? 0,
                 oleo_diesel_b_s10_comum: element.gas_station_OLEO_DIESEL_B_S10_COMUM_comb ?? 0,
                 oleo_diesel_b_s500_comum: element.gas_station_OLEO_DIESEL_B_S500_COMUM_comb ?? 0
 
@@ -869,7 +875,11 @@ class VariablesController {
                         invoice_comb: 0,
                         invoice_prod: 0,
                         invoice_comb_daily: 0,
-                        invoice_prod_daily: 0
+                        invoice_prod_daily: 0,
+                        freight_value: 0,
+                        gross_result_literage: 0,
+                        gross_result_product: 0
+
                     });
                 }
             });
@@ -892,12 +902,13 @@ class VariablesController {
             const id_token = extractUserIdFromToken(use_token, secret)
             const { id, tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, tm_lucro_bruto_operacional_galonagem,
                 tm_lucro_bruto_operacional_produto, mlt, etanol_comum,
-                gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum, invoice_prod, invoice_comb, invoice_comb_daily, invoice_prod_daily }: {
+                gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum, invoice_prod, invoice_comb, invoice_comb_daily, invoice_prod_daily, freight_value, gross_result_literage, gross_result_product }: {
                     id: string, tmp: number, tmf: number, tmc: number,
                     tmvol: number, tm_lucro_bruto_operacional: number, tm_lucro_bruto_operacional_galonagem: number,
                     tm_lucro_bruto_operacional_produto: number, mlt: number, etanol_comum: number,
                     gasolina_comum: number, oleo_diesel_b_s10_comum: number,
-                    oleo_diesel_b_s500_comum: number, invoice_prod: number, invoice_comb: number, invoice_comb_daily: number, invoice_prod_daily: number
+                    oleo_diesel_b_s500_comum: number, invoice_prod: number, invoice_comb: number, invoice_comb_daily: number,
+                    invoice_prod_daily: number, freight_value: number, gross_result_literage: number, gross_result_product: number
                 } = req.body
             const result = await prisma.gas_station_setvariables.findFirst({ where: { use_uuid: id_token, ibm_info_id: id } })
             if (!result) {
@@ -919,6 +930,9 @@ class VariablesController {
                         gas_station_invoice_prod: invoice_prod,
                         gas_station_invoice_comb_daily: invoice_comb_daily,
                         gas_station_invoice_prod_daily: invoice_prod_daily,
+                        gas_station_freight_value: freight_value,
+                        gas_station_gross_result_literage: gross_result_literage,
+                        gas_station_gross_result_product: gross_result_product,
                         use_uuid: id_token,
                         ibm_info_id: id
                     }
@@ -938,6 +952,9 @@ class VariablesController {
                         gas_station_invoice_prod: invoice_prod,
                         gas_station_invoice_comb_daily: invoice_comb_daily,
                         gas_station_invoice_prod_daily: invoice_prod_daily,
+                        gas_station_freight_value: freight_value,
+                        gas_station_gross_result_literage: gross_result_literage,
+                        gas_station_gross_result_product: gross_result_product,
                         gas_station_ETANOL_COMUM_comb: etanol_comum,
                         gas_station_GASOLINA_COMUM_comb: gasolina_comum,
                         gas_station_OLEO_DIESEL_B_S10_COMUM_comb: oleo_diesel_b_s10_comum,
@@ -1117,14 +1134,14 @@ class VariablesController {
             const id_token = extractUserIdFromToken(use_token, secret)
             const { tmp, tmf, tmc, tmvol, tm_lucro_bruto_operacional, tm_lucro_bruto_operacional_galonagem,
                 tm_lucro_bruto_operacional_produto, mlt, etanol_comum,
-                gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum, invoice_comb, invoice_prod, invoice_comb_daily, invoice_prod_daily }: {
+                gasolina_comum, oleo_diesel_b_s10_comum, oleo_diesel_b_s500_comum, invoice_comb, invoice_prod, invoice_comb_daily, invoice_prod_daily, freight_value, gross_result_literage, gross_result_product }: {
                     id: string, tmp: number, tmf: number, tmc: number,
                     tmvol: number, tm_lucro_bruto_operacional: number, tm_lucro_bruto_operacional_galonagem: number,
                     tm_lucro_bruto_operacional_produto: number, mlt: number, etanol_comum: number,
                     gasolina_comum: number,
                     oleo_diesel_b_s10_comum: number,
                     oleo_diesel_b_s500_comum: number, invoice_comb: number, invoice_prod: number,
-                    invoice_comb_daily: number, invoice_prod_daily: number
+                    invoice_comb_daily: number, invoice_prod_daily: number, freight_value: number, gross_result_literage: number, gross_result_product: number
                 } = req.body
 
 
@@ -1145,7 +1162,10 @@ class VariablesController {
                     gas_station_invoice_comb: invoice_comb,
                     gas_station_invoice_prod: invoice_prod,
                     gas_station_invoice_comb_daily: invoice_comb_daily,
-                    gas_station_invoice_prod_daily: invoice_prod_daily
+                    gas_station_invoice_prod_daily: invoice_prod_daily,
+                    gas_station_freight_value: freight_value,
+                    gas_station_gross_result_literage: gross_result_literage,
+                    gas_station_gross_result_product: gross_result_product,
                 }, where: { use_uuid: id_token }
 
             })
@@ -1184,6 +1204,9 @@ class VariablesController {
                     gas_station_invoice_prod: true,
                     gas_station_invoice_comb_daily: true,
                     gas_station_invoice_prod_daily: true,
+                    gas_station_freight_value: true,
+                    gas_station_gross_result_literage: true,
+                    gas_station_gross_result_product: true,
                     ibm_info: {
                         select: {
                             nomefantasia: true,
@@ -1218,7 +1241,10 @@ class VariablesController {
                 invoice_comb: element.gas_station_invoice_comb ?? 0,
                 invoice_prod: element.gas_station_invoice_prod ?? 0,
                 invoice_comb_daily: element.gas_station_invoice_comb_daily ?? 0,
-                invoice_prod_daily: element.gas_station_invoice_prod_daily ?? 0
+                invoice_prod_daily: element.gas_station_invoice_prod_daily ?? 0,
+                freight_value: element.gas_station_freight_value ?? 0,
+                gross_result_literage: element.gas_station_gross_result_literage ?? 0,
+                gross_result_product: element.gas_station_gross_result_product ?? 0
 
             }));
 
@@ -1245,7 +1271,10 @@ class VariablesController {
                         invoice_comb: 0,
                         invoice_prod: 0,
                         invoice_comb_daily: 0,
-                        invoice_prod_daily: 0
+                        invoice_prod_daily: 0,
+                        freight_value: 0,
+                        gross_result_literage: 0,
+                        gross_result_product: 0
                     });
                 }
             });
