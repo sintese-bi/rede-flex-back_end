@@ -30,7 +30,9 @@ model users {
   use_GASOLINA_COMUM_comb               Float?
   use_OLEO_DIESEL_B_S10_COMUM_comb      Float?
   use_OLEO_DIESEL_B_S500_COMUM_comb     Float?
+  gallon_gross_history                  gallon_gross_history[]
   gasStationSetVariables                gas_station_setvariables[]
+  product_gross_history                 product_gross_history[]
   regionSetVariables                    region_setvariables[]
 }
 
@@ -53,7 +55,9 @@ model ibm_info {
   ibm_margin_ETANOL_COMUM                Float[]
   ibm_margin_TOTAL_PRODUCT               Float[]
   ibm_margin_ADITIVOS_AUTOMOVEIS_PRODUCT Float[]
+  gallon_gross_history                   gallon_gross_history[]
   gasStationSetVariables                 gas_station_setvariables[]
+  product_gross_history                  product_gross_history[]
 }
 
 model gas_station_setvariables {
@@ -200,13 +204,38 @@ model regions {
 }
 
 model big_numbers_values {
-  bignumbers_uuid               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  bignumbers_sumliterage        Float?
-  bignumbers_invoicing          Float?
-  bignumbers_Supplies           Float?
-  bignumbers_fuelSales          Float?
-  bignumbers_fuelProfit         Float?
-  bignumbers_productSales       Float?
-  bignumbers_productProfit      Float?
-  bignumbers_dailyProductProfit Float?
+  bignumbers_uuid                String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bignumbers_sumliterage         Float?
+  bignumbers_invoicing           Float?
+  bignumbers_Supplies            Float?
+  bignumbers_fuelSales           Float?
+  bignumbers_fuelProfit          Float?
+  bignumbers_productSales        Float?
+  bignumbers_productProfit       Float?
+  bignumbers_dailyProductProfit  Float?
+  bignumbers_dailyLiterageProfit Float?
+}
+
+model gallon_gross_history {
+  gallon_history_uuid       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ibm_info_id               String?   @db.Uuid
+  use_uuid                  String?   @db.Uuid
+  gallon_history_gross      Float?
+  gallon_history_date       DateTime?
+  gallon_history_created_at DateTime  @default(now()) @db.Timestamp(6)
+  gallon_history_updated_at DateTime  @default(now()) @db.Timestamp(6)
+  ibm_info                  ibm_info? @relation(fields: [ibm_info_id], references: [id])
+  users                     users?    @relation(fields: [use_uuid], references: [use_uuid])
+}
+
+model product_gross_history {
+  product_history_uuid       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ibm_info_id                String?   @db.Uuid
+  use_uuid                   String?   @db.Uuid
+  product_history_gross      Float?
+  product_history_date       DateTime?
+  product_history_created_at DateTime  @default(now()) @db.Timestamp(6)
+  product_history_updated_at DateTime  @default(now()) @db.Timestamp(6)
+  ibm_info                   ibm_info? @relation(fields: [ibm_info_id], references: [id])
+  users                      users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
