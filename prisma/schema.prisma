@@ -55,6 +55,7 @@ model ibm_info {
   ibm_margin_ETANOL_COMUM                Float[]
   ibm_margin_TOTAL_PRODUCT               Float[]
   ibm_margin_ADITIVOS_AUTOMOVEIS_PRODUCT Float[]
+  ibm_margin_FILTROS_AR_PRODUCT          Float[]
   gallon_gross_history                   gallon_gross_history[]
   gasStationSetVariables                 gas_station_setvariables[]
   product_gross_history                  product_gross_history[]
@@ -129,6 +130,11 @@ model gas_station_setvariables {
   gas_station_freight_value                                  Float?
   gas_station_gross_result_literage                          Float?
   gas_station_gross_result_product                           Float?
+  gas_station_margin_FILTROS_AR_PRODUCT                      Float?
+  gas_station_sanado_hour_margin_FILTROS_AR_PRODUCT          DateTime?
+  gas_station_sanado_margin_FILTROS_AR_PRODUCT               Boolean?
+  gas_station_type_margin_FILTROS_AR_PRODUCT                 Boolean?
+  verification_hour_margin_FILTROS_AR_PRODUCT                DateTime? @default(dbgenerated("'2023-01-01 00:00:00'::timestamp without time zone"))
   ibm_info                                                   ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                                                      users?    @relation(fields: [use_uuid], references: [use_uuid])
 }

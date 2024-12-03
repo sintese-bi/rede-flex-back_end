@@ -730,8 +730,8 @@ class VariablesController {
                     use_tmp: use_tmp, use_lucro_bruto_operacional: Math.round((use_lucro_bruto_operacional / 100) * 100) / 100,
                     use_GASOLINA_COMUM_comb: use_gasolina_comum, use_ETANOL_COMUM_comb: use_etanol_comum, use_OLEO_DIESEL_B_S10_COMUM_comb: use_oleo_diesel_b_s10_comum,
                     use_OLEO_DIESEL_B_S500_COMUM_comb: use_oleo_diesel_b_s500_comum,
-                    use_lucro_bruto_operacional_galonagem: Math.round((use_lucro_bruto_operacional_galonagem / 100) * 100) / 100,
-                    use_lucro_bruto_operacional_produto: Math.round((use_lucro_bruto_operacional_produto / 100) * 100) / 100
+                    use_lucro_bruto_operacional_galonagem: Math.round(use_lucro_bruto_operacional_galonagem * 100) / 100,
+                    use_lucro_bruto_operacional_produto: Math.round(use_lucro_bruto_operacional_produto * 100) / 100
                 }, where: { use_uuid: id }
             })
             return res.status(200).json({ message: "Dados atualizados com sucesso!" })
@@ -764,8 +764,8 @@ class VariablesController {
             const info = {
                 use_tmc: result?.use_tmc, use_tmf: result?.use_tmf, use_mlt: result?.use_mlt, use_tmp: result?.use_tmp,
                 use_tmvol: result?.use_tmvol, use_lucro_bruto_operacional: Math.round(((result?.use_lucro_bruto_operacional || 0) * 100) * 100) / 100,
-                use_lucro_bruto_operacional_produto: Math.round(((result?.use_lucro_bruto_operacional_produto || 0) * 100) * 100) / 100,
-                use_lucro_bruto_operacional_galonagem: Math.round(((result?.use_lucro_bruto_operacional_galonagem || 0) * 100) * 100) / 100,
+                use_lucro_bruto_operacional_produto: Math.round(((result?.use_lucro_bruto_operacional_produto || 0) * 100)) / 100,
+                use_lucro_bruto_operacional_galonagem: Math.round(((result?.use_lucro_bruto_operacional_galonagem || 0) * 100)) / 100,
                 use_gasolina_comum: result?.use_GASOLINA_COMUM_comb, use_etanol_comum: result?.use_ETANOL_COMUM_comb,
                 use_oleo_diesel_b_s10_comum: result?.use_OLEO_DIESEL_B_S10_COMUM_comb,
                 use_oleo_diesel_b_s500_comum: result?.use_OLEO_DIESEL_B_S500_COMUM_comb
