@@ -31,8 +31,10 @@ model users {
   use_OLEO_DIESEL_B_S10_COMUM_comb      Float?
   use_OLEO_DIESEL_B_S500_COMUM_comb     Float?
   gallon_gross_history                  gallon_gross_history[]
+  gallon_gross_last_week                gallon_gross_last_week[]
   gasStationSetVariables                gas_station_setvariables[]
   product_gross_history                 product_gross_history[]
+  product_gross_last_week               product_gross_last_week[]
   regionSetVariables                    region_setvariables[]
 }
 
@@ -244,4 +246,24 @@ model product_gross_history {
   product_history_updated_at DateTime  @default(now()) @db.Timestamp(6)
   ibm_info                   ibm_info? @relation(fields: [ibm_info_id], references: [id])
   users                      users?    @relation(fields: [use_uuid], references: [use_uuid])
+}
+
+model gallon_gross_last_week {
+  gallon_last_history_uuid       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  use_uuid                       String?   @db.Uuid
+  gallon_last_history_gross      Float?
+  gallon_last_history_date       DateTime?
+  gallon_last_history_created_at DateTime  @default(now()) @db.Timestamp(6)
+  gallon_last_history_updated_at DateTime  @default(now()) @db.Timestamp(6)
+  users                          users?    @relation(fields: [use_uuid], references: [use_uuid])
+}
+
+model product_gross_last_week {
+  product_last_history_uuid       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  use_uuid                        String?   @db.Uuid
+  product_last_history_gross      Float?
+  product_last_history_date       DateTime?
+  product_last_history_created_at DateTime  @default(now()) @db.Timestamp(6)
+  product_last_history_updated_at DateTime  @default(now()) @db.Timestamp(6)
+  users                           users?    @relation(fields: [use_uuid], references: [use_uuid])
 }
